@@ -1,5 +1,6 @@
-import jsonpickle
+import json
 from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterface
+from cloudshell.shell.core.driver_context import AutoLoadDetails
 from K8S_App_Shell_OS import *
 import os, sys
 import json
@@ -9,6 +10,8 @@ class K8ShellDriver(ResourceDriverInterface):
         """
         ctor must be without arguments, it is created with reflection at run time
         """
+        self.deployments = dict()
+        self.deployments['Deploy Container'] = self.deploy_vm
 
         # from a json file...
         self.k8appdata = dict()
@@ -29,14 +32,12 @@ class K8ShellDriver(ResourceDriverInterface):
         self.k8appdata["AppType4"] = "app"
 
 
-        self.deployments = dict()
-        self.deployments['Deploy Container'] = self.deploy_vm
-
         self.k8 = K8S_APP_Shell_OS(k8appdata)
-        self.k8.shell_health_check()
+        #self.k8.shell_health_check()
+        pass
 
     def Deploy(self, context, request=None, cancellation_context=None):
-        app_request = jsonpickle.decode(request)
+        app_request = json.loads(request)
         deployment_name = app_request['DeploymentServiceName']
         if deployment_name in self.deployments.keys():
             deploy_method = self.deployments[deployment_name]
@@ -76,7 +77,7 @@ class K8ShellDriver(ResourceDriverInterface):
         fh = os.open("C:/temp/k8shelltestlog_destroy.txt",os.O_RDWR|os.CREAT)
         os.write(fh,json.dumps(context))
         os.write(fh,json.dumps(ports))
-        
+
         #self.k8.shell_teardown_script()
         pass
 
@@ -90,6 +91,7 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def get_inventory(self, context):
+        return AutoLoadDetails([], [])
         pass
 
     def GetAccessKey(self, context, ports):

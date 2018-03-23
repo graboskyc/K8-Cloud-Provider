@@ -8,7 +8,7 @@ echo "Downloading Latest Version of Code"
 echo
 
 cd K8\ Shell\ Driver
-#wget https://raw.githubusercontent.com/mpw07458/K8S-Deploy/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py -O K8S_App_Shell_OS.py -q
+wget https://raw.githubusercontent.com/mpw07458/K8S-Deploy/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py -O K8S_App_Shell_OS.py -q
 
 echo
 echo "Incrementing build number..."
@@ -18,6 +18,7 @@ nlbn="$(echo $cv | rev | cut -d. -f1 | rev)"
 nbn=`echo $nlbn | awk '{$1++; print $0}'`
 nb=${cv%.*}"."${nbn}
 sed -i drivermetadata.xml -e "s/$cv/$nb/g"
+echo $nb > version.txt
 
 echo
 echo "Creating python driver"
