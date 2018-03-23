@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataModelInfo xmlns="http://schemas.qualisystems.com/ResourceManagement/DataModelSchema.xsd">
+  <Attributes>
+    <AttributeInfo Name="Autoload" DefaultValue="true" Description="Determines if the Autoload process runs for Apps deployed manually or during the reservation's setup." IsReadOnly="false" Type="Boolean">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Add Public IP" DefaultValue="False" Description="." IsReadOnly="false" Type="Boolean">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Inbound Ports" Description="Semi-colon separated list of ports and protocols to open inbound traffic from outside of the sandbox. The syntax is port[single/range]:protocol [tcp(default)/udp ].For example: “80;443:tcp;200-220:udp”" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Extension Script file" Description="The path to the script files that will be downloaded to the virtual machine. For Linux machines, it’s possible to use more than one script file. Example: https://gist.github.com/ahmetalpbalkan/b5d4a856fe15464015ae87d5587a4439/raw/466f5c30507c990a4d5a2f5c79f901fa89a80841/hello.sh" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Extension Script Configurations" Description="Additional information for the extension execution. For Linux machines, The command to execute, for example: python MyPythonScript.py input1 input2. For Windows machines, The PowerShell script arguments(Optional), for example: --input1 value2 –input2 value2." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Extension Script Timeout" DefaultValue="1200" Description="Extension Script Timeout in seconds" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Public IP" DefaultValue="" Description="" IsReadOnly="false" Type="String">
+        <Rules>
+            <Rule Name="Configuration" />
+            <Rule Name="Setting" />
+        </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Password" DefaultValue="" Description="" IsReadOnly="false" Type="Password">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="User"  DefaultValue="" Description="" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Generic Input" DefaultValue="" Description="" IsReadOnly="false" Type="String">
+      <Rules/>
+    </AttributeInfo>
+    <AttributeInfo Name="Region" DefaultValue="" Description="The public cloud region to be used by this cloud provider resource." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="VM Size"  DefaultValue="" Description="" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Networks In Use"  DefaultValue="" Description="Reserved networks to be excluded when allocating Sandbox networks. The value should include at least the Management Network. The syntax is comma-separated CIDRs. For example: “10.0.0.0/24, 10.1.0.0/16, 172.31.0.0/24”." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+     <AttributeInfo DefaultValue="" Description="This attribute points to a pre-define group of execution servers. Usually used for different sites or domains." IsReadOnly="false" Name="Execution Server Selector" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+        <Rule Name="Execution Server Selector" />
+      </Rules>
+    </AttributeInfo>
+
+    <!--Cloud Provider new Attributes-->
+    <AttributeInfo Name="Subscription ID"  DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Tenant ID"  DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Application Key"  DefaultValue="" Description="" IsReadOnly="false" Type="Password">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Application ID"  DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Management Group Name"  DefaultValue="" Description="The name of the Management Resource Group." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Additional Mgmt Networks"  DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+
+    <!--New Deployment Option Attributes -->
+    <AttributeInfo Name="Public IP Type"  DefaultValue="" Description="Static Public IP Type ensures that the VM always uses the same public IP. By default, Public IPs are dynamic and their address may change when the VM is powered off." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Image Publisher"  DefaultValue="" Description="" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Image Offer"  DefaultValue="" Description="" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Image SKU"  DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Image Version" DefaultValue="latest" Description="" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Image" DefaultValue="" Description="Name of the custom image to be used to create a VM." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Resource Group" DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+    <AttributeInfo Name="Disk Type" DefaultValue="" Description="Type of disk to use (HDD / SSD). Default is HDD" IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
+  </Attributes>
+  <ResourceFamilies>
+    <ResourceFamily Description="" IsAdminOnly="true" IsSearchable="false" Name="Cloud Provider" AllowRemoteConnection="false">
+      <AttachedAttributes />
+      <AttributeValues />
+      <Models>
+        <ResourceModel Description="" ImagePath="K8.png" Name="Kubernetes" SupportsConcurrentCommands="true">
+          <AttachedAttributes>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Region">
+              <AllowedValues/>
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="VM Size">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Networks In Use">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Subscription ID">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Tenant ID">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Application Key">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Application ID">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Management Group Name">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Execution Server Selector">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Additional Mgmt Networks">
+              <AllowedValues />
+            </AttachedAttribute>
+          </AttachedAttributes>
+          <ParentModels />
+          <Drivers>
+            <DriverName>K8 Shell Driver</DriverName>
+          </Drivers>
+          <Scripts>
+          </Scripts>
+        </ResourceModel>
+      </Models>
+      <Categories />
+    </ResourceFamily>
+    <ResourceFamily Description="" IsSearchable="true" Name="Generic App Family" ResourceType="Application" IsLockedByDefault="true">
+      <AttachedAttributes>
+      </AttachedAttributes>
+      <AttributeValues>
+      </AttributeValues>
+      <Models>
+        <ResourceModel Description="" Name="Generic App Model" SupportsConcurrentCommands="false">
+          <AttachedAttributes>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Password"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="User"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Public IP"/>
+          </AttachedAttributes>
+          <AttributeValues>
+          </AttributeValues>
+          <ParentModels />
+          <Drivers>
+          </Drivers>
+          <Scripts>
+          </Scripts>
+        </ResourceModel>
+      </Models>
+      <Categories />
+    </ResourceFamily>
+    <ResourceFamily Description="" IsService="true" Name="Deployment Options" ServiceType="Deployment">
+      <AttachedAttributes />
+      <AttributeValues />
+      <Models>
+        <ResourceModel Description="" Name="Deploy Container" ImagePath="K8Container.png" SupportsConcurrentCommands="false">          <AttachedAttributes>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="VM Size" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Autoload" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Add Public IP" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Extension Script file" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Extension Script Configurations" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+          <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Extension Script Timeout" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Public IP Type" UserInput="true">
+              <AllowedValues>
+                <AllowedValue>Static</AllowedValue>
+                <AllowedValue>Dynamic</AllowedValue>
+              </AllowedValues>
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Inbound Ports" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Image Publisher" UserInput="true" >
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Image Offer" UserInput="true" >
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Image SKU" UserInput="true" >
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Image Version" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Disk Type" UserInput="true">
+              <AllowedValues>
+                <AllowedValue>HDD</AllowedValue>
+                <AllowedValue>SSD</AllowedValue>
+              </AllowedValues>
+            </AttachedAttribute>
+          </AttachedAttributes>
+          <AttributeValues>
+            <AttributeValue Name="Public IP Type" Value="Dynamic" />
+            <AttributeValue Name="Disk Type" Value="HDD" />
+          </AttributeValues>
+          <ParentModels />
+          <Drivers/>
+        </ResourceModel>
+      </Models>
+      <Categories>
+      </Categories>
+    </ResourceFamily>
+  </ResourceFamilies>
+  <DriverDescriptors>
+      <DriverDescriptor Name="K8 Shell Driver" DriverType="PythonDriver" />
+  </DriverDescriptors>
+</DataModelInfo>

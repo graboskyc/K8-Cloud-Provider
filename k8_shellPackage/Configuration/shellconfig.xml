@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ShellsConfiguration
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://schemas.qualisystems.com/ResourceManagement/ShellsConfigurationSchema.xsd">
+    <ResourceTemplates>
+        <ResourceTemplate Name="Kubernetes" Model="Kubernetes" Driver="K8 Shell Driver" AddressRequired="false">
+            <Description>asd.</Description>
+            <AutoLoad Enable="true">
+                <Description>After filling in all the inputs click Continue to complete the cloud provider creation process.</Description>
+            </AutoLoad>
+            <Attributes>
+                <Attribute Name="Region" Value="" />
+                <Attribute Value="" Name="Subscription ID"/>
+                <Attribute Value="" Name="Tenant ID"/>
+                <Attribute Value="" Name="Application Key"/>
+                <Attribute Value="" Name="Application ID"/>
+                <Attribute Value="" Name="Management Group Name"/>
+                <Attribute Value="Standard_A3" Name="VM Size"/>
+                <Attribute Value="" Name="Additional Mgmt Networks"/>
+                <Attribute Value="10.0.0.0/24" Name="Networks In Use"/>
+                <Attribute Value="" Name="Execution Server Selector"/>
+            </Attributes>
+        </ResourceTemplate>
+    </ResourceTemplates>
+</ShellsConfiguration>

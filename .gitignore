@@ -99,3 +99,11 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+######################
+# for this project
+######################
+K8ShellPkg.zip
+k8_shellPackage\Resource Drivers - Python\K8 Shell Driver.zip
+K8 Shell Driver/K8S_App_Shell_OS.py
+k8_shellPackage/Resource Drivers - Python/K8 Shell Driver.zip
