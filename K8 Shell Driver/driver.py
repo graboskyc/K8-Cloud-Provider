@@ -51,6 +51,11 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def deploy_vm(self, context, request, cancellation_context):
+        ## REMOVE THIS BLOCK AS IT IS NOT OFFICIAL LOGGING!
+        fh = os.open("C:/temp/k8shelltestlog_deploy.txt",os.O_RDWR|os.CREAT)
+        os.write(fh,json.dumps(context))
+        os.write(fh,json.dumps(ports))
+
         #self.k8.shell_deployment_script()
         pass
 
@@ -67,9 +72,11 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def destroy_vm_only(self, context, ports):
-        fh = os.open("C:/temp/k8shelltestlog.txt",os.O_RDWR|os.CREAT)
+        ## REMOVE THIS BLOCK AS IT IS NOT OFFICIAL LOGGING!
+        fh = os.open("C:/temp/k8shelltestlog_destroy.txt",os.O_RDWR|os.CREAT)
         os.write(fh,json.dumps(context))
         os.write(fh,json.dumps(ports))
+        
         #self.k8.shell_teardown_script()
         pass
 
