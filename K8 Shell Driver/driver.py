@@ -32,7 +32,7 @@ class K8ShellDriver(ResourceDriverInterface):
         self.k8appdata["AppType4"] = "app"
 
 
-        self.k8 = K8S_APP_Shell_OS(k8appdata)
+        self.k8 = K8S_APP_Shell_OS(self.k8appdata)
         #self.k8.shell_health_check()
         pass
 
