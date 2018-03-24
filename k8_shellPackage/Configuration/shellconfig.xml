@@ -10,16 +10,9 @@
                 <Description>After filling in all the inputs click Continue to complete the cloud provider creation process.</Description>
             </AutoLoad>
             <Attributes>
-                <Attribute Name="Region" Value="" />
-                <Attribute Value="" Name="Subscription ID"/>
-                <Attribute Value="" Name="Tenant ID"/>
-                <Attribute Value="" Name="Application Key"/>
-                <Attribute Value="" Name="Application ID"/>
-                <Attribute Value="" Name="Management Group Name"/>
-                <Attribute Value="Standard_A3" Name="VM Size"/>
-                <Attribute Value="" Name="Additional Mgmt Networks"/>
-                <Attribute Value="10.0.0.0/24" Name="Networks In Use"/>
-                <Attribute Value="" Name="Execution Server Selector"/>
+                <Attribute Value="" Name="Service Account Username"/>
+                <Attribute Value="" Name="Public Access Key"/>
+                <Attribute Value="" Name="Private Access Key"/>
             </Attributes>
         </ResourceTemplate>
     </ResourceTemplates>
