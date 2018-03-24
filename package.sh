@@ -16,12 +16,27 @@ while true; do
     esac
 done
 
-echo
-echo "Downloading Latest Version of Code"
-echo
+downloadLatest=true
+while true; do
+    read -p "Y/N: Download K8S_App_Shell_OS?" resp
+    case $resp in
+       [yY]* ) downloadLatest=true
+           break;;
+
+        [nN]* ) downloadLatest=false
+            break;;
+    esac
+done
 
 cd K8\ Shell\ Driver
-wget https://raw.githubusercontent.com/mpw07458/K8S-Deploy/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py -O K8S_App_Shell_OS.py -q
+
+if $downloadLatest; then
+    echo
+    echo "Downloading Latest Version of Code"
+    echo
+
+    wget https://raw.githubusercontent.com/mpw07458/K8S-Deploy/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py -O K8S_App_Shell_OS.py -q
+fi
 
 if $incBuild; then
     echo
