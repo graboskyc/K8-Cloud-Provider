@@ -81,12 +81,6 @@ class K8ShellDriver(ResourceDriverInterface):
         #self.k8.shell_teardown_script()
         pass
 
-    def PrepareConnectivity(self, context, request, cancellation_context):
-        pass
-
-    def CleanupConnectivity(self, context, request):
-        pass
-
     def GetApplicationPorts(self, context, ports):
         pass
 
