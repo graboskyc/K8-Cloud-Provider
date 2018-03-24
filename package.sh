@@ -6,7 +6,7 @@ hash awk 2>/dev/null || { echo >&2 "awk is not installed. try running apt-get in
 
 incBuild=true
 while true; do
-    read -p "Y/N: Increment build number?" resp
+    read -p "Y/N: Increment build number? " resp
     case $resp in
        [yY]* ) incBuild=true
            break;;
@@ -18,7 +18,7 @@ done
 
 downloadLatest=true
 while true; do
-    read -p "Y/N: Download K8S_App_Shell_OS?" resp
+    read -p "Y/N: Download K8S_App_Shell_OS? " resp
     case $resp in
        [yY]* ) downloadLatest=true
            break;;

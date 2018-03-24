@@ -2,8 +2,7 @@ import json
 from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterface
 from cloudshell.shell.core.driver_context import AutoLoadDetails
 from K8S_App_Shell_OS import *
-import os, sys
-import json
+import pickle
 
 class K8ShellDriver(ResourceDriverInterface):
     def __init__(self):
@@ -13,26 +12,7 @@ class K8ShellDriver(ResourceDriverInterface):
         self.deployments = dict()
         self.deployments['Deploy Container'] = self.deploy_vm
 
-        # from a json file...
-        self.k8appdata = dict()
-        self.k8appdata["AppDir1"] = "./node-demo-app-master"
-        self.k8appdata["AppName1"] = "demo-app"
-        self.k8appdata["AppType1"] = "node"
-        self.k8appdata["AppImgID1"] = "22e36adaa33c"
-        self.k8appdata["AppImgURL1"] = "index.docker.io/in4it/node-demo-app"
-        self.k8appdata["Appyaml1"] = "demo.app.yml"
-        self.k8appdata["AppName2"] = "busybox"
-        self.k8appdata["AppURI3"] = "https://k8s.io/docs/tasks/run-application/deployment.yaml"
-        self.k8appdata["AppName4"] = "nginx"
-        self.k8appdata["AppImg4"] = "nginx:1.9.1"
-        self.k8appdata["AppDeployName4"] = "nginx-deployment"
-        self.k8appdata["AppPort4"] = "80"
-        self.k8appdata["AppRepl4"] = "3"
-        self.k8appdata["AppNamespace4"] = "dev-test"
-        self.k8appdata["AppType4"] = "app"
-
-
-        self.k8 = K8S_APP_Shell_OS(self.k8appdata)
+        #self.k8 = K8S_APP_Shell_OS(self.k8appdata)
         #self.k8.shell_health_check()
         pass
 
@@ -53,11 +33,13 @@ class K8ShellDriver(ResourceDriverInterface):
 
     def deploy_vm(self, context, request, cancellation_context):
         ## REMOVE THIS BLOCK AS IT IS NOT OFFICIAL LOGGING!
-        fh = os.open("C:/temp/k8shelltestlog_deploy.txt",os.O_RDWR|os.CREAT)
-        os.write(fh,json.dumps(context))
-        os.write(fh,json.dumps(ports))
+        with open("C:/temp/k8shelltestlog_deploy.txt", 'w+') as fh:
+            fh.write(pickle.dumps(context))
+            fh.write(pickle.dumps(request))
 
         #self.k8.shell_deployment_script()
+
+        return "{'vm_name':'Test123','vm_uuid':'55555','cloud_provider_resource_name':'test','auto_power_off':false,'wait_for_ip':false,'auto_delete':true,'autoload':true,'deployed_app_address':'127.0.0.1','public_ip':''}"
         pass
 
     def PowerOn(self, context, ports):
@@ -74,9 +56,9 @@ class K8ShellDriver(ResourceDriverInterface):
 
     def destroy_vm_only(self, context, ports):
         ## REMOVE THIS BLOCK AS IT IS NOT OFFICIAL LOGGING!
-        fh = os.open("C:/temp/k8shelltestlog_destroy.txt",os.O_RDWR|os.CREAT)
-        os.write(fh,json.dumps(context))
-        os.write(fh,json.dumps(ports))
+        with open("C:/temp/k8shelltestlog_destroy.txt", 'w+') as fh:
+            fh.write(pickle.dumps(context))
+            fh.write(pickle.dumps(ports))
 
         #self.k8.shell_teardown_script()
         pass

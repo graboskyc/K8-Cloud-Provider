@@ -1,0 +1,4 @@
+
+sbsb.S'{\r\n  "AppName": "k8",\r\n  "UserRequestedAppName": "k8",\r\n  "DeploymentServiceName": "Kubernetes Deploy Container",\r\n  "Attributes": {\r\n    "App Name": "an",\r\n    "Autoload": "True",\r\n    "App Tag": "at",\r\n    "App Img": "ai",\r\n    "App Deploy Name": "adn",\r\n    "App Namespace": "ans",\r\n    "App Port": "ap",\r\n    "App Repl": "arepl",\r\n    "App Type": "aty"\r\n  },\r\n  "LogicalResourceRequestAttributes": {\r\n    "Password": "3M3u7nkDzxWb0aJ/IZYeWw==",\r\n    "Public IP": "",\r\n    "User": ""\r\n  },\r\n  "NetworkConfigurationsRequest": {\r\n    "actions": null\r\n  }\r\n}'
+p0
+.

@@ -1,0 +1,53 @@
+class DeployResult(object):
+
+    def __init__(self, vm_name, vm_uuid, cloud_provider_resource_name, autoload,
+
+                 inbound_ports, deployed_app_attributes, deployed_app_address,
+
+                 public_ip, resource_group, extension_time_out, vm_details_data):
+
+        """
+
+        self.resource_group = resource_group
+
+        self.inbound_ports = inbound_ports
+
+        self.vm_name = vm_name
+
+        self.vm_uuid = vm_uuid
+
+        self.cloud_provider_resource_name = cloud_provider_resource_name
+
+        self.auto_power_off = False
+
+        self.wait_for_ip = False
+
+        self.auto_delete = True
+
+        self.autoload = autoload
+
+        self.deployed_app_attributes = deployed_app_attributes
+
+        self.deployed_app_address = deployed_app_address
+
+        self.public_ip = public_ip
+
+        self.extension_time_out = extension_time_out
+
+        self.vm_details_data = vm_details_data
+
+
+
+
+
+2018-03-24 12:32:49,276 - application - InstanceLoader - ERROR - Customer's driver raised an exception:
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\QualiSystems\TestShell\ExecutionServer\QsPythonDriverHost\execution\instance_loader.py", line 134, in invoke_func
+    result = driver_func(**args)
+  File "c:\windows\temp\tmpvr_sdb.zip_env\orchestrator.py", line 72, in deploy
+    session.RefreshVMDetails(reservation_id, [deployed_app_name])
+  File "C:\ProgramData\QualiSystems\venv\Deployment_Orchestrator_7_1\lib\site-packages\cloudshell\api\cloudshell_api.py", line 2549, in RefreshVMDetails
+    return self.generateAPIRequest(OrderedDict([('method_name', 'RefreshVMDetails'), ('reservationId', reservationId), ('deployedAppNames', deployedAppNames)]))
+  File "C:\ProgramData\QualiSystems\venv\Deployment_Orchestrator_7_1\lib\site-packages\cloudshell\api\common_cloudshell_api.py", line 449, in generateAPIRequest
+    raise CloudShellAPIError(api_result.error_code, api_result.error, response_str)
+CloudShellAPIError: CloudShell API error 100: Error occurred when refreshing VM details
