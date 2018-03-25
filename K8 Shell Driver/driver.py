@@ -1,6 +1,7 @@
 import json
 from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterface
 from cloudshell.shell.core.driver_context import AutoLoadDetails
+from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionContext
 from K8S_App_Shell_OS import *
 import pickle
 
@@ -32,33 +33,45 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def deploy_vm(self, context, request, cancellation_context):
-        ## REMOVE THIS BLOCK AS IT IS NOT OFFICIAL LOGGING!
-        with open("C:/temp/k8shelltestlog_deploy.txt", 'w+') as fh:
-            fh.write(pickle.dumps(context))
-            fh.write(pickle.dumps(request))
-
         #self.k8.shell_deployment_script()
+        """
+        request["AppName"]
+        request["UserRequestedAppName"]
+        request["Attributes"]["App Name"]
+        request["Attributes"]["App Tag"]
+        request["Attributes"]["App Img"]
+        request["Attributes"]["App Deploy Name"]
+        request["Attributes"]["App Namespace"]
+        request["Attributes"]["App Port"]
+        request["Attributes"]["App Repl"]
+        request["Attributes"]["App Name"]
+        request["Attributes"]["App Type"]
+        context.resource.attributes["Private Access Key"]
+        """
 
-        return "{'vm_name':'Test123','vm_uuid':'55555','cloud_provider_resource_name':'test','auto_power_off':false,'wait_for_ip':false,'auto_delete':true,'autoload':true,'deployed_app_address':'127.0.0.1','public_ip':''}"
+        return "{'vm_name':'"+request["Attributes"]["App Name"]+"','vm_uuid':'55555','cloud_provider_resource_name':'test','auto_power_off':false,'wait_for_ip':false,'auto_delete':true,'autoload':true,'deployed_app_address':'127.0.0.1','public_ip':''}"
         pass
 
     def PowerOn(self, context, ports):
+        with CloudShellSessionContext(context) as cloudshell_session:
+            cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Online", "Powered On")
         pass
 
     def PowerOff(self, context, ports):
+        with CloudShellSessionContext(context) as cloudshell_session:
+            cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Online", "Powered On")
         pass
 
     def PowerCycle(self, context, ports, delay):
+        PowerOff(context, ports)
+        time.sleep(delay)
+        PowerOn(context, ports)
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
         pass
 
     def destroy_vm_only(self, context, ports):
-        ## REMOVE THIS BLOCK AS IT IS NOT OFFICIAL LOGGING!
-        with open("C:/temp/k8shelltestlog_destroy.txt", 'w+') as fh:
-            fh.write(pickle.dumps(context))
-            fh.write(pickle.dumps(ports))
 
         #self.k8.shell_teardown_script()
         pass
