@@ -13,6 +13,8 @@
                 <Attribute Value="" Name="Service Account Username"/>
                 <Attribute Value="" Name="Public Access Key"/>
                 <Attribute Value="" Name="Private Access Key"/>
+                <Attribute Value="" Name="IP Address"/>
+                <Attribute Value="" Name="Port"/>
             </Attributes>
         </ResourceTemplate>
     </ResourceTemplates>
