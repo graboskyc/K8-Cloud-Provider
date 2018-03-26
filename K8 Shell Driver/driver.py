@@ -3,7 +3,8 @@ from cloudshell.shell.core.resource_driver_interface import ResourceDriverInterf
 from cloudshell.shell.core.driver_context import AutoLoadDetails
 from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionContext
 from K8S_App_Shell_OS import *
-import pickle
+from DeployVMReturnObj import *
+import uuid
 
 class K8ShellDriver(ResourceDriverInterface):
     def __init__(self):
@@ -13,8 +14,6 @@ class K8ShellDriver(ResourceDriverInterface):
         self.deployments = dict()
         self.deployments['Deploy Container'] = self.deploy_vm
 
-        #self.k8 = K8S_APP_Shell_OS(self.k8appdata)
-        #self.k8.shell_health_check()
         pass
 
     def Deploy(self, context, request=None, cancellation_context=None):
@@ -27,13 +26,15 @@ class K8ShellDriver(ResourceDriverInterface):
             raise Exception('Could not find the deployment')
 
     def initialize(self, context):
+        #self.k8 = K8S_APP_Shell_OS(context.resource.attributes["Service Account Username"], context.resource.attributes["Private Access Key"], context.resource.attributes["Public Access Key"])
+        #self.k8.shell_health_check()
         pass
 
     def cleanup(self):
         pass
 
     def deploy_vm(self, context, request, cancellation_context):
-        #self.k8.shell_deployment_script()
+        
         """
         request["AppName"]
         request["UserRequestedAppName"]
@@ -48,8 +49,16 @@ class K8ShellDriver(ResourceDriverInterface):
         request["Attributes"]["App Type"]
         context.resource.attributes["Private Access Key"]
         """
+        r = json.loads(request)
+        uid = str(uuid.uuid4())[:8]
+        newName = r["UserRequestedAppName"] + "_" + uid
 
-        return "{'vm_name':'"+request["Attributes"]["App Name"]+"','vm_uuid':'55555','cloud_provider_resource_name':'test','auto_power_off':false,'wait_for_ip':false,'auto_delete':true,'autoload':true,'deployed_app_address':'127.0.0.1','public_ip':''}"
+        #appname, appns, appport, appimg, apptype, apprepl, appdepname, appdir
+        #self.k8.shell_deployment_script()
+        
+        ro = DeployVMReturnObj(newName, uid, context.resource.name, "127.0.0.1", "")
+
+        return ro
         pass
 
     def PowerOn(self, context, ports):
@@ -69,10 +78,11 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
+        return
         pass
 
     def destroy_vm_only(self, context, ports):
-
+        #appname, appns
         #self.k8.shell_teardown_script()
         pass
 
