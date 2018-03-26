@@ -15,6 +15,12 @@
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
+    <AttributeInfo Name="App File" DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
     <AttributeInfo Name="App Tag" DefaultValue="" Description="." IsReadOnly="false" Type="String">
       <Rules>
         <Rule Name="Configuration" />
@@ -180,7 +186,7 @@
       <AttachedAttributes />
       <AttributeValues />
       <Models>
-        <ResourceModel Description="" Name="Kubernetes Deploy Container" ImagePath="K8Container.png" SupportsConcurrentCommands="false">          
+        <ResourceModel Description="" Name="Kubernetes Deploy Container From Image" ImagePath="K8Container.png" SupportsConcurrentCommands="false">          
         <AttachedAttributes>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Name" UserInput="true">
               <AllowedValues />
@@ -207,6 +213,24 @@
               <AllowedValues />
             </AttachedAttribute>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Type" UserInput="true" >
+              <AllowedValues />
+            </AttachedAttribute>
+        </AttachedAttributes>
+        <ParentModels />
+        <Drivers/>
+      </ResourceModel>
+      <ResourceModel Description="" Name="Kubernetes Deploy Container From File" ImagePath="K8Container.png" SupportsConcurrentCommands="false">          
+        <AttachedAttributes>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Name" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Autoload" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App File" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Port" UserInput="true">
               <AllowedValues />
             </AttachedAttribute>
         </AttachedAttributes>

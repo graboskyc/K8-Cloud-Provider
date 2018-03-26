@@ -12,7 +12,8 @@ class K8ShellDriver(ResourceDriverInterface):
         ctor must be without arguments, it is created with reflection at run time
         """
         self.deployments = dict()
-        self.deployments['Deploy Container'] = self.deploy_vm
+        self.deployments['Kubernetes Deploy Container From Image'] = self.deploy_img
+        self.deployments['Kubernetes Deploy Container From File'] = self.deploy_file
 
         pass
 
@@ -33,7 +34,39 @@ class K8ShellDriver(ResourceDriverInterface):
     def cleanup(self):
         pass
 
-    def deploy_vm(self, context, request, cancellation_context):
+    def deploy_img(self, context, request, cancellation_context):
+        
+        """
+        request["AppName"]
+        request["UserRequestedAppName"]
+        request["Attributes"]["App Name"]
+        request["Attributes"]["App Tag"]
+        request["Attributes"]["App Img"]
+        request["Attributes"]["App Deploy Name"]
+        request["Attributes"]["App Namespace"]
+        request["Attributes"]["App Port"]
+        request["Attributes"]["App Repl"]
+        request["Attributes"]["App Name"]
+        request["Attributes"]["App Type"]
+        context.resource.attributes["Private Access Key"]
+        """
+        r = json.loads(request)
+        lrra = r["LogicalResourceRequestAttributes"]
+        uid = str(uuid.uuid4())[:8]
+        newName = r["UserRequestedAppName"] + "_" + uid
+        attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
+
+        newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
+
+        #appname, appns, appport, appimg, apptype, apprepl, appdepname, appdir
+        #self.k8.shell_deployment_script()
+        
+        ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
+
+        return ro
+        pass
+
+    def deploy_file(self, context, request, cancellation_context):
         
         """
         request["AppName"]
