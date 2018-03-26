@@ -52,11 +52,12 @@ class K8ShellDriver(ResourceDriverInterface):
         r = json.loads(request)
         uid = str(uuid.uuid4())[:8]
         newName = r["UserRequestedAppName"] + "_" + uid
+        attr = {'Password':r["LogicalResourceRequestAttributes"]["Password"],"User":r["LogicalResourceRequestAttributes"]["User"],"Public IP":r["LogicalResourceRequestAttributes"]["Public IP"]}
 
         #appname, appns, appport, appimg, apptype, apprepl, appdepname, appdir
         #self.k8.shell_deployment_script()
         
-        ro = DeployVMReturnObj(newName, uid, context.resource.name, "127.0.0.1", "")
+        ro = DeployVMReturnObj(newName, uid, context.resource.name, "127.0.0.1", "", attr)
 
         return ro
         pass
