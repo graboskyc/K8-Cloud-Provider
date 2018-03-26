@@ -48,6 +48,7 @@ if $incBuild; then
     nb=${cv%.*}"."${nbn}
     sed -i drivermetadata.xml -e "s/$cv/$nb/g"
     echo $nb > version.txt
+    echo $nb > ../k8_shellPackage/version.txt
 fi
 
 echo
