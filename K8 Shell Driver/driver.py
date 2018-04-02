@@ -34,6 +34,13 @@ class K8ShellDriver(ResourceDriverInterface):
     def cleanup(self):
         pass
 
+    def getKey(self):
+        # hack for now
+        with open('c:\\temp\\tempkey.key', 'r') as content_file:
+            api_ca_cert = content_file.read()
+
+        return api_ca_cert
+
     def deploy_img(self, context, request, cancellation_context):
         # parse inputs and create a uuid for container name
         r = json.loads(request)
@@ -45,8 +52,7 @@ class K8ShellDriver(ResourceDriverInterface):
         CPAtts = context.resource.attributes
 
         # hack for now
-        with open('c:\\temp\\tempkey.key', 'r') as content_file:
-            api_ca_cert = content_file.read()
+        api_ca_cert = self.getKey()
 
         # app data dict to pass to Mike's code
         add = {}
@@ -54,14 +60,14 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppImg"] = r["Attributes"]["App Img"]
         add["AppDeployName"] = newName
         add["AppPort"] = r["Attributes"]["App Port"]
-        add["AppImg"] = r["Attributes"]["App Repl"]
+        add["AppRepl"] = r["Attributes"]["App Repl"]
         add["AppNamespace"] = r["Attributes"]["App Namespace"]
         add["AppType"] = "dict"
-        add["AppImg"] = "app"
+        add["AppSubType"] = "app"
         add["AppImgUpdate"] = ""
 
         # run mike's code
-        k = K8S_APP_Shell_OS(json.dumps(add), CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
         k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType) 
         
@@ -82,8 +88,7 @@ class K8ShellDriver(ResourceDriverInterface):
         CPAtts = context.resource.attributes
 
         # hack for now
-        with open('c:\\temp\\tempkey.key', 'r') as content_file:
-            api_ca_cert = content_file.read()
+        api_ca_cert = self.getKey()
 
         # app data dict to pass to Mike's code
         add = {}
@@ -94,7 +99,7 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppType"] = "yaml"
         add["AppSubType"] = "app"
 
-        k = K8S_APP_Shell_OS(json.dumps(add), CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
         k.shell_deployment_script(k.AppName, '', '', k.AppType, '',k.AppName, k.AppNamespace, '',k.AppYamlFileName, k.AppSubType)
         
@@ -124,8 +129,18 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def destroy_vm_only(self, context, ports):
-        #appname, appns
-        #self.k8.shell_teardown_script()
+        # parse inputs and create a uuid for container name
+        CPAtts = context.resource.attributes
+
+        add = {}
+        add["AppName"] = context.remote_endpoints[0].fullname
+
+        # hack for now
+        api_ca_cert = self.getKey()
+
+        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        #k.shell_teardown_script(k.AppName, default_name_space)
+
         pass
 
     def GetApplicationPorts(self, context, ports):
