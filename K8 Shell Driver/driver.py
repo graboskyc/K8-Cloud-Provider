@@ -35,63 +35,68 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def deploy_img(self, context, request, cancellation_context):
-        
-        """
-        request["AppName"]
-        request["UserRequestedAppName"]
-        request["Attributes"]["App Name"]
-        request["Attributes"]["App Tag"]
-        request["Attributes"]["App Img"]
-        request["Attributes"]["App Deploy Name"]
-        request["Attributes"]["App Namespace"]
-        request["Attributes"]["App Port"]
-        request["Attributes"]["App Repl"]
-        request["Attributes"]["App Name"]
-        request["Attributes"]["App Type"]
-        context.resource.attributes["Private Access Key"]
-        """
+        # parse inputs and create a uuid for container name
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
         uid = str(uuid.uuid4())[:8]
         newName = r["UserRequestedAppName"] + "_" + uid
         attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
-
         newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
+        CPAtts = context.resource.attributes
 
-        #appname, appns, appport, appimg, apptype, apprepl, appdepname, appdir
-        #self.k8.shell_deployment_script()
+        # hack for now
+        with open('c:\\temp\\tempkey.key', 'r') as content_file:
+            api_ca_cert = content_file.read()
+
+        # app data dict to pass to Mike's code
+        add = {}
+        add["AppName"] = r["Attributes"]["App Name"]
+        add["AppImg"] = r["Attributes"]["App Img"]
+        add["AppDeployName"] = newName
+        add["AppPort"] = r["Attributes"]["App Port"]
+        add["AppImg"] = r["Attributes"]["App Repl"]
+        add["AppNamespace"] = r["Attributes"]["App Namespace"]
+        add["AppType"] = "dict"
+        add["AppImg"] = "app"
+        add["AppImgUpdate"] = ""
+
+        # run mike's code
+        k = K8S_APP_Shell_OS(json.dumps(add), CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        k.shell_health_check()
+        k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType) 
         
-        ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
+        # return cloudshell object
+        ro = DeployVMReturnObj(newName, uid, CPAtts["IP Address"], newAddr, "", attr)
 
         return ro
         pass
 
     def deploy_file(self, context, request, cancellation_context):
-        
-        """
-        request["AppName"]
-        request["UserRequestedAppName"]
-        request["Attributes"]["App Name"]
-        request["Attributes"]["App Tag"]
-        request["Attributes"]["App Img"]
-        request["Attributes"]["App Deploy Name"]
-        request["Attributes"]["App Namespace"]
-        request["Attributes"]["App Port"]
-        request["Attributes"]["App Repl"]
-        request["Attributes"]["App Name"]
-        request["Attributes"]["App Type"]
-        context.resource.attributes["Private Access Key"]
-        """
+        # parse inputs and create a uuid for container name
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
         uid = str(uuid.uuid4())[:8]
         newName = r["UserRequestedAppName"] + "_" + uid
         attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
-
         newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
+        CPAtts = context.resource.attributes
 
-        #appname, appns, appport, appimg, apptype, apprepl, appdepname, appdir
-        #self.k8.shell_deployment_script()
+        # hack for now
+        with open('c:\\temp\\tempkey.key', 'r') as content_file:
+            api_ca_cert = content_file.read()
+
+        # app data dict to pass to Mike's code
+        add = {}
+        add["AppName"] = r["Attributes"]["App Name"]
+        add["AppYamlFileName"] = r["Attributes"]["App File"]
+        add["AppDeployName"] = newName
+        add["AppNamespace"] = r["Attributes"]["App Namespace"]
+        add["AppType"] = "yaml"
+        add["AppSubType"] = "app"
+
+        k = K8S_APP_Shell_OS(json.dumps(add), CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        k.shell_health_check()
+        k.shell_deployment_script(k.AppName, '', '', k.AppType, '',k.AppName, k.AppNamespace, '',k.AppYamlFileName, k.AppSubType)
         
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
 

@@ -100,7 +100,7 @@
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
-    <AttributeInfo Name="Public Access Key"  DefaultValue="" Description="." IsReadOnly="false" Type="String">
+    <AttributeInfo Name="CA Cert"  DefaultValue="" Description="." IsReadOnly="false" Type="Password">
       <Rules>
         <Rule Name="Configuration" />
         <Rule Name="Setting" />
@@ -136,7 +136,7 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Service Account Username">
               <AllowedValues />
             </AttachedAttribute>
-            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Public Access Key">
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="CA Cert">
               <AllowedValues />
             </AttachedAttribute>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Private Access Key">
@@ -231,6 +231,9 @@
               <AllowedValues />
             </AttachedAttribute>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Port" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Namespace" UserInput="true">
               <AllowedValues />
             </AttachedAttribute>
         </AttachedAttributes>
