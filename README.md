@@ -14,4 +14,15 @@ This is a proof of concept skunkworks project to make a cloud provider for Kuber
 ## About
 * The code that makes this work is based on another python script by [Mike Williams](https://github.com/mpw07458/K8S-Deploy/blob/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py)
 * CloudShell Cloud Provider Shell is not officially supported until 9.0 
-* Currently *this code does nothing* and in time will actually deploy containers. While the above python script may work, it is not fully implemented in the shell yet.
+* Tear down isn;t implemented yet
+
+## Screenshots
+![](SS/01.PNG)
+
+![](SS/02.PNG)
+
+![](SS/03.PNG)
+
+![](SS/04.PNG)
+
+![](SS/05.PNG)
