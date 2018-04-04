@@ -46,7 +46,7 @@ class K8ShellDriver(ResourceDriverInterface):
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
         uid = str(uuid.uuid4())[:8]
-        newName = r["UserRequestedAppName"] + "_" + uid
+        newName = r["UserRequestedAppName"] + "-" + uid
         attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
         newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
         CPAtts = context.resource.attributes
@@ -82,7 +82,7 @@ class K8ShellDriver(ResourceDriverInterface):
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
         uid = str(uuid.uuid4())[:8]
-        newName = r["UserRequestedAppName"] + "_" + uid
+        newName = r["UserRequestedAppName"] + "-" + uid
         attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
         newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
         CPAtts = context.resource.attributes
