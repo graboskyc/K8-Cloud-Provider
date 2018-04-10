@@ -146,7 +146,11 @@ class K8ShellDriver(ResourceDriverInterface):
         # hack for now
         api_ca_cert = self.getKey()
 
-        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        pak = ""
+        with CloudShellSessionContext(context) as csapi:
+            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
+
+        k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         #k.shell_teardown_script(k.AppName, default_name_space)
 
         pass
