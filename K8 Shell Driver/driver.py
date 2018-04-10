@@ -67,7 +67,11 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppImgUpdate"] = ""
 
         # run mike's code
-        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        pak = ""
+        with CloudShellSessionContext(context) as csapi:
+            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
+
+        k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
         k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType) 
         
@@ -99,7 +103,11 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppType"] = "yaml"
         add["AppSubType"] = "app"
 
-        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        pak = ""
+        with CloudShellSessionContext(context) as csapi:
+            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
+
+        k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
         k.shell_deployment_script(k.AppName, '', '', k.AppType, '',k.AppName, k.AppNamespace, '',k.AppYamlFileName, k.AppSubType)
         
