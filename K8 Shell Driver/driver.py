@@ -48,7 +48,7 @@ class K8ShellDriver(ResourceDriverInterface):
         uid = str(uuid.uuid4())[:8]
         newName = r["UserRequestedAppName"] + "-" + uid
         attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
-        newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
+        newAddr = context.resource.attributes["IP Address"] + ":" + r["Attributes"]["App Port"]
         CPAtts = context.resource.attributes
 
         # hack for now
@@ -84,7 +84,7 @@ class K8ShellDriver(ResourceDriverInterface):
         uid = str(uuid.uuid4())[:8]
         newName = r["UserRequestedAppName"] + "-" + uid
         attr = {'Password':lrra["Password"],"User":lrra["User"],"Public IP":lrra["Public IP"]}
-        newAddr = context.resource.address + ":" + r["Attributes"]["App Port"]
+        newAddr = context.resource.attributes["IP Address"] + ":" + r["Attributes"]["App Port"]
         CPAtts = context.resource.attributes
 
         # hack for now
