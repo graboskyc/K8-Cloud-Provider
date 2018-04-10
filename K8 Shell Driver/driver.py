@@ -133,7 +133,6 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
-        return
         pass
 
     def destroy_vm_only(self, context, ports):
