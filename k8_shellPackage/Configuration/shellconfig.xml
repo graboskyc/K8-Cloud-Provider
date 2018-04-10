@@ -15,6 +15,7 @@
                 <Attribute Value="" Name="Private Access Key"/>
                 <Attribute Value="" Name="IP Address"/>
                 <Attribute Value="" Name="Port"/>
+                <Attribute Value="" Name="Execution Server Selector"/>
             </Attributes>
         </ResourceTemplate>
     </ResourceTemplates>

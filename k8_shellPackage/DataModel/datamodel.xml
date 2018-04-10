@@ -130,6 +130,9 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Port">
               <AllowedValues />
             </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Execution Server Selector">
+              <AllowedValues />
+            </AttachedAttribute>
           </AttachedAttributes>
           <ParentModels />
           <Drivers>
