@@ -45,6 +45,12 @@
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
+    <AttributeInfo Name="App Service Name" DefaultValue="" Description="." IsReadOnly="false" Type="String">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
 
     <!-- Exe server selector -->
     <AttributeInfo DefaultValue="" Description="This attribute points to a pre-define group of execution servers. Usually used for different sites or domains." IsReadOnly="false" Name="Execution Server Selector" Type="String">
@@ -191,6 +197,9 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Repl" UserInput="true">
               <AllowedValues />
             </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
         </AttachedAttributes>
         <ParentModels />
         <Drivers/>
@@ -210,6 +219,9 @@
               <AllowedValues />
             </AttachedAttribute>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Namespace" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name" UserInput="true">
               <AllowedValues />
             </AttachedAttribute>
         </AttachedAttributes>

@@ -65,6 +65,7 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppType"] = "dict"
         add["AppSubType"] = "app"
         add["AppImgUpdate"] = ""
+        add["AppSvcName"] = r["Attributes"]["App Service Name"]
 
         # run mike's code
         pak = ""
@@ -75,8 +76,9 @@ class K8ShellDriver(ResourceDriverInterface):
         k.shell_health_check()
         # change for shell deployment script add service name and service object
         svc_obj = k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType, k.AppSvcName)
-        #pprint(svc_obj)
+        
         # return cloudshell object
+        newAddr = svc_obj[add["AppSvcName"],'address'][0]["ip"] + ":" + svc_obj[add["AppSvcName"],'port'][0]["port"]
         ro = DeployVMReturnObj(newName, uid, CPAtts["IP Address"], newAddr, "", attr)
 
         return ro
@@ -103,8 +105,7 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppNamespace"] = r["Attributes"]["App Namespace"]
         add["AppType"] = "yaml"
         add["AppSubType"] = "app"
-        # added for service
-        add["AppSvcName"] = "gb-service"
+        add["AppSvcName"] = r["Attributes"]["App Service Name"]
 
         pak = ""
         with CloudShellSessionContext(context) as csapi:
@@ -117,6 +118,7 @@ class K8ShellDriver(ResourceDriverInterface):
                                             k.AppNamespace, "", k.AppYamlFileName, k.AppSubType, k.AppSvcName)
         #pprint(svc_obj)
         
+        newAddr = svc_obj[add["AppSvcName"],'address'][0]["ip"] + ":" + svc_obj[add["AppSvcName"],'port'][0]["port"]
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
 
         return ro
