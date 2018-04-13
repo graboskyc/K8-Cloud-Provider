@@ -41,25 +41,24 @@ class K8ShellDriver(ResourceDriverInterface):
 
         return api_ca_cert
 
-    def parseK8sRetObj(svcStr, serviceName):
+    def parseK8sRetObj(self, svcObj, serviceName):
         addList = []
         portList = []
-        svcObj = json.loads(svcStr)
 
-        for item in svcObj["items"]:
+        for item in svcObj.items:
             # ignore outside of namespace
-            if item["metadata"]["name"] == serviceName:
+            if item.metadata.name == serviceName:
                 # this could be in read or not ready addresses
-                if "addresses" in item["subsets"]:
-                    l = item["subsets"]["addresses"]
+                if item.subsets.addresses == None:
+                    l = item.subsets.notReadyAddresses
                 else:
-                    l = item["subsets"]["notReadyAddresses"]
+                    l = item.subsets.addresses
 
                 for addrObj in l:
-                    addList.append(l["ip"])
+                    addList.append(l.ip)
 
-                for portObj in item["subsets"]["ports"]:
-                    portList.append(portObj["port"])
+                for portObj in item.subsets.ports:
+                    portList.append(portObj.port)
 
         return {"Addresses":addList, "Ports":portList}
 
@@ -97,7 +96,7 @@ class K8ShellDriver(ResourceDriverInterface):
 
         k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
-        
+
         # change for shell deployment script add service name and service object
         svcStr = k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType, k.AppSvcName)
         svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
