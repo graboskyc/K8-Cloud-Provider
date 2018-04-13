@@ -41,6 +41,29 @@ class K8ShellDriver(ResourceDriverInterface):
 
         return api_ca_cert
 
+    def parseK8sRetObj(svcStr, serviceName):
+        addList = []
+        portList = []
+        svcObj = json.loads(svcStr)
+
+        for item in svcObj["items"]:
+            # ignore outside of namespace
+            if item["metadata"]["name"] == serviceName:
+                # this could be in read or not ready addresses
+                if "addresses" in item["subsets"]:
+                    l = item["subsets"]["addresses"]
+                else:
+                    l = item["subsets"]["notReadyAddresses"]
+
+                for addrObj in l:
+                    addList.append(l["ip"])
+
+                for portObj in item["subsets"]["ports"]:
+                    portList.append(portObj["port"])
+
+        return {"Addresses":addList, "Ports":portList}
+
+
     def deploy_img(self, context, request, cancellation_context):
         # parse inputs and create a uuid for container name
         r = json.loads(request)
@@ -74,11 +97,11 @@ class K8ShellDriver(ResourceDriverInterface):
 
         k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
-        # change for shell deployment script add service name and service object
-        svc_obj = k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType, k.AppSvcName)
         
-        # return cloudshell object
-        newAddr = svc_obj[add["AppSvcName"],'address'][0]["ip"] + ":" + svc_obj[add["AppSvcName"],'port'][0]["port"]
+        # change for shell deployment script add service name and service object
+        svcStr = k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType, k.AppSvcName)
+        svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
+        newAddr = svcObj["Addresses"][0] + ":" + svcObj["Ports"][0]
         ro = DeployVMReturnObj(newName, uid, CPAtts["IP Address"], newAddr, "", attr)
 
         return ro
@@ -113,12 +136,11 @@ class K8ShellDriver(ResourceDriverInterface):
 
         k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
+
         # change for shell deployment script add service name and service object
-        svc_obj = k.shell_deployment_script(k.AppName, '', '', k.AppType, '', k.AppDeployName,
-                                            k.AppNamespace, "", k.AppYamlFileName, k.AppSubType, k.AppSvcName)
-        #pprint(svc_obj)
-        
-        newAddr = svc_obj[add["AppSvcName"],'address'][0]["ip"] + ":" + svc_obj[add["AppSvcName"],'port'][0]["port"]
+        svcStr = k.shell_deployment_script(k.AppName, '', '', k.AppType, '', k.AppDeployName, k.AppNamespace, "", k.AppYamlFileName, k.AppSubType, k.AppSvcName)
+        svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
+        newAddr = svcObj["Addresses"][0] + ":" + svcObj["Ports"][0]
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
 
         return ro
