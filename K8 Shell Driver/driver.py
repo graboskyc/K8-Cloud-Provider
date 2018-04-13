@@ -73,8 +73,10 @@ class K8ShellDriver(ResourceDriverInterface):
 
         k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
-        k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType) 
-        
+        # change for shell deployment script add service name and service object
+        #svc_obj = k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType)
+        svc_obj = k.shell_deployment_script(k.AppName, k.AppPort, k.AppImg, k.AppType, k.AppRepl, k.AppDeployName,k.AppNamespace, k.AppImgUpdate, "", k.AppSubType, k.AppSvcName)
+        pprint(svc_obj)
         # return cloudshell object
         ro = DeployVMReturnObj(newName, uid, CPAtts["IP Address"], newAddr, "", attr)
 
@@ -102,6 +104,8 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppNamespace"] = r["Attributes"]["App Namespace"]
         add["AppType"] = "yaml"
         add["AppSubType"] = "app"
+        # added for service
+        add["AppSvcName"] = "gb-service"
 
         pak = ""
         with CloudShellSessionContext(context) as csapi:
@@ -109,7 +113,11 @@ class K8ShellDriver(ResourceDriverInterface):
 
         k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         k.shell_health_check()
-        k.shell_deployment_script(k.AppName, '', '', k.AppType, '',k.AppName, k.AppNamespace, '',k.AppYamlFileName, k.AppSubType)
+        # change for shell deployment script add service name and service object
+        #k.shell_deployment_script(k.AppName, '', '', k.AppType, '',k.AppName, k.AppNamespace, '',k.AppYamlFileName, k.AppSubType)
+        svc_obj = k.shell_deployment_script(k.AppName, '', '', k.AppType, '', k.AppDeployName,
+                                            k.AppNamespace, "", k.AppYamlFileName, k.AppSubType, k.AppSvcName)
+        pprint(svc_obj)
         
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
 
@@ -133,6 +141,7 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
+        return
         pass
 
     def destroy_vm_only(self, context, ports):
@@ -145,11 +154,7 @@ class K8ShellDriver(ResourceDriverInterface):
         # hack for now
         api_ca_cert = self.getKey()
 
-        pak = ""
-        with CloudShellSessionContext(context) as csapi:
-            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
-
-        k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        k = K8S_APP_Shell_OS(add, CPAtts["Private Access Key"], CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
         #k.shell_teardown_script(k.AppName, default_name_space)
 
         pass
