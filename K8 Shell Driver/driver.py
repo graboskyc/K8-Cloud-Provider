@@ -46,21 +46,24 @@ class K8ShellDriver(ResourceDriverInterface):
         portList = []
 
         for item in svcObj.items:
-            # ignore outside of namespace
+
             if item.metadata.name == serviceName:
-                # this could be in read or not ready addresses
-                if item.subsets.addresses == None:
-                    l = item.subsets.notReadyAddresses
-                else:
-                    l = item.subsets.addresses
 
-                for addrObj in l:
-                    addList.append(l.ip)
+                for subset in item.subsets:
 
-                for portObj in item.subsets.ports:
-                    portList.append(portObj.port)
+                    service_port = subset.ports
+                    service_address = subset.addresses
+                    if service_address is None:
+                        service_address = subset.not_ready_addresses
+
+                    for addrObj in service_address:
+                        addList.append(addrObj.ip)
+
+                    for portObj in service_port:
+                        portList.append(portObj.port)
 
         return {"Addresses":addList, "Ports":portList}
+
 
 
     def deploy_img(self, context, request, cancellation_context):
@@ -139,7 +142,8 @@ class K8ShellDriver(ResourceDriverInterface):
         # change for shell deployment script add service name and service object
         svcStr = k.shell_deployment_script(k.AppName, '', '', k.AppType, '', k.AppDeployName, k.AppNamespace, "", k.AppYamlFileName, k.AppSubType, k.AppSvcName)
         svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
-        newAddr = svcObj["Addresses"][0] + ":" + svcObj["Ports"][0]
+        newAddr = svcObj["Addresses"][0] + ":" + str(svcObj["Ports"][0])
+
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
 
         return ro
@@ -156,9 +160,9 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def PowerCycle(self, context, ports, delay):
-        PowerOff(context, ports)
+        self.PowerOff(context, ports)
         time.sleep(delay)
-        PowerOn(context, ports)
+        self.PowerOn(context, ports)
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
@@ -179,7 +183,7 @@ class K8ShellDriver(ResourceDriverInterface):
         with CloudShellSessionContext(context) as csapi:
             pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
         k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
-        #k.shell_teardown_script(k.AppName, default_name_space)
+        k.shell_teardown_script(k.AppName, k.AppSvcName, k.AppNamespace)
 
         pass
 
