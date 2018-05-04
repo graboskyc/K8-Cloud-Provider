@@ -175,7 +175,14 @@ class K8ShellDriver(ResourceDriverInterface):
 
         add = {}
         add["AppName"] = context.remote_endpoints[0].fullname
-
+        add["AppType"] = "yaml"
+        add["AppSubType"] = "app"
+        add["AppSvcName"] = "gb-service"
+        add["AppNamespace"] = "production"
+        add["AppDeployName"] = "frontend"
+        add["AppYamlFileName"] = "gb-frontend.yaml"
+        pprint(add)
+        pprint(CPAtts)
         # hack for now
         api_ca_cert = self.getKey()
 
