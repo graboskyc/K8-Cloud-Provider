@@ -5,7 +5,7 @@ from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionCo
 from K8S_App_Shell_OS import *
 from DeployVMReturnObj import *
 import uuid
-global k8s_context
+_k8s_context =''
 class K8ShellDriver(ResourceDriverInterface):
     def __init__(self):
         """
@@ -97,14 +97,17 @@ class K8ShellDriver(ResourceDriverInterface):
         with CloudShellSessionContext(context) as csapi:
             pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
 
-        k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
-        k8s_context.shell_health_check()
+        self._k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
+        self._k8s_context.shell_health_check()
 
         # change for shell deployment script add service name and service object
-        svcStr = k8s_context.shell_deployment_script(k8s_context.AppName, k8s_context.AppPort, k8s_context.AppImg,
-                                                     k8s_context.AppType, k8s_context.AppRepl, k8s_context.AppDeployName,
-                                                     k8s_context.AppNamespace, k8s_context.AppImgUpdate, "",
-                                                     k8s_context.AppSubType, k8s_context.AppSvcName)
+        svcStr = self._k8s_context.shell_deployment_script(self._k8s_context.AppName, self._k8s_context.AppPort,
+                                                           self._k8s_context.AppImg, self._k8s_context.AppType,
+                                                           self._k8s_context.AppRepl, self._k8s_context.AppDeployName,
+                                                           self._k8s_context.AppNamespace,
+                                                           self._k8s_context.AppImgUpdate, "",
+                                                           self._k8s_context.AppSubType,
+                                                           self._k8s_context.AppSvcName)
         svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
         newAddr = svcObj["Addresses"][0] + ":" + svcObj["Ports"][0]
         ro = DeployVMReturnObj(newName, uid, CPAtts["IP Address"], newAddr, "", attr)
@@ -143,10 +146,11 @@ class K8ShellDriver(ResourceDriverInterface):
         k8s_context.shell_health_check()
 
         # change for shell deployment script add service name and service object
-        svcStr = k8s_context.shell_deployment_script(k8s_context.AppName, '', '', k8s_context.AppType,
-                                                     '', k8s_context.AppDeployName, k8s_context.AppNamespace, "",
-                                                     k8s_context.AppYamlFileName, k8s_context.AppSubType,
-                                                     k8s_context.AppSvcName)
+        svcStr = self._k8s_context.shell_deployment_script(self._k8s_context.AppName, '', '', self._k8s_context.AppType,
+                                                           '', self._k8s_context.AppDeployName,
+                                                           self._k8s_context.AppNamespace, '',
+                                                           self._k8s_context.AppYamlFileName,
+                                                           self._k8s_context.AppSubType, self._k8s_context.AppSvcName)
         svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
         newAddr = svcObj["Addresses"][0] + ":" + str(svcObj["Ports"][0])
 
@@ -177,7 +181,7 @@ class K8ShellDriver(ResourceDriverInterface):
 
     def destroy_vm_only(self, context, ports):
         # parse inputs and create a uuid for container name
-        CPAtts = context.resource.attributes
+        #CPAtts = context.resource.attributes
 
         #add = {}
         #add["AppName"] = context.remote_endpoints[0].fullname
@@ -190,13 +194,14 @@ class K8ShellDriver(ResourceDriverInterface):
         #pprint(add)
         #pprint(CPAtts)
         # hack for now
-        api_ca_cert = self.getKey()
+        #api_ca_cert = self.getKey()
 
         #pak = ""
         #with CloudShellSessionContext(context) as csapi:
         #pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
         #k = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
-        k8s_context.shell_teardown_script(k8s_context.AppName, k8s_context.AppSvcName, k8s_context.AppNamespace)
+        self._k8s_context.shell_teardown_script(self._k8s_context.AppName, self._k8s_context.AppSvcName,
+                                                self._k8s_context.AppNamespace)
 
         pass
 
