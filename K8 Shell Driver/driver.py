@@ -143,7 +143,10 @@ class K8ShellDriver(ResourceDriverInterface):
         k8s_context.shell_health_check()
 
         # change for shell deployment script add service name and service object
-        svcStr = k8s_context.shell_deployment_script(k.AppName, '', '', k.AppType, '', k.AppDeployName, k.AppNamespace, "", k.AppYamlFileName, k.AppSubType, k.AppSvcName)
+        svcStr = k8s_context.shell_deployment_script(k8s_context.AppName, '', '', k8s_context.AppType,
+                                                     '', k8s_context.AppDeployName, k8s_context.AppNamespace, "",
+                                                     k8s_context.AppYamlFileName, k8s_context.AppSubType,
+                                                     k8s_context.AppSvcName)
         svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
         newAddr = svcObj["Addresses"][0] + ":" + str(svcObj["Ports"][0])
 
