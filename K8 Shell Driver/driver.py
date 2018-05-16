@@ -40,35 +40,7 @@ class K8ShellDriver(ResourceDriverInterface):
             api_ca_cert = content_file.read()
 
         return api_ca_cert
-
-    def parseK8sRetObj(self, svcObj, serviceName):
-        addList = []
-        portList = []
-        print('service object: ')
-        pprint(svcObj)
-        print('service name: ' + serviceName)
-
-        for item in svcObj.items:
-
-            if item.metadata.name == serviceName:
-
-                for subset in item.subsets:
-
-                    service_port = subset.ports
-                    service_address = subset.addresses
-                    if service_address is None:
-                        service_address = subset.not_ready_addresses
-
-                    for addrObj in service_address:
-                        addList.append(addrObj.ip)
-
-                    for portObj in service_port:
-                        portList.append(portObj.port)
-
-        return {"Addresses":addList, "Ports":portList}
-
-
-
+    
     def deploy_img(self, context, request, cancellation_context):
         # parse inputs and create a uuid for container name
         r = json.loads(request)
@@ -158,7 +130,6 @@ class K8ShellDriver(ResourceDriverInterface):
                                                       _k8s_context.AppDeployName,_k8s_context.AppNamespace, '',
                                                       _k8s_context.AppYamlFileName,_k8s_context.AppSubType,
                                                       _k8s_context.AppSvcName)
-        #svcObj = self.parseK8sRetObj(svcStr, r["Attributes"]["App Service Name"])
         newAddr = svcObj["Addresses"][0] + ":" + str(svcObj["Ports"][0])
 
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
@@ -198,26 +169,18 @@ class K8ShellDriver(ResourceDriverInterface):
         _attrib = json.load(open(filename))
         #retrieve attributes from file
         add = _attrib
-        #add["AppName"] = context.remote_endpoints[0]
-        #add["AppType"] = "yaml"
-        #add["AppSubType"] = "app"
-        #add["AppSvcName"] = "mysql-service"
-        #add["AppNamespace"] = "production"
-        #add["AppDeployName"] = "mysql"
-        #add["AppYamlFileName"] = "mysql.yaml"
-        print("address dict: ")
         pprint(add)
 
         # hack for now
         api_ca_cert = self.getKey()
 
         pak = ""
+
         with CloudShellSessionContext(context) as csapi:
             pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
         _k8s_context = K8S_APP_Shell_OS(add, "primary", pak, CPAtts["IP Address"], CPAtts["Port"], api_ca_cert)
-        _k8s_context.shell_teardown_script("primary", _k8s_context.AppName, _k8s_context.AppSvcName,
-                                           _k8s_context.AppNamespace)
-
+        _k8s_context.shell_teardown_script("primary", _k8s_context.AppName, _k8s_context.AppNamespace,
+                                           _k8s_context.AppSvcName)
         pass
 
     def GetApplicationPorts(self, context, ports):
