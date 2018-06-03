@@ -163,8 +163,8 @@ class K8ShellDriver(ResourceDriverInterface):
         pprint(add)
 
         # hack for now
-        api_ca_cert = self.getKey()
-
+        #api_ca_cert = self.getKey()
+        cacert = ""
         pak = ""
 
         with CloudShellSessionContext(context) as csapi:
