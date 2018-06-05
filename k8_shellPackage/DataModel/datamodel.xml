@@ -88,13 +88,13 @@
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
-    <AttributeInfo Name="CA Cert"  DefaultValue="" Description="." IsReadOnly="false" Type="Password">
+    <AttributeInfo Name="CA Cert URI"  DefaultValue="Path to cert" Description="." IsReadOnly="false" Type="Password">
       <Rules>
         <Rule Name="Configuration" />
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
-    <AttributeInfo Name="Private Access Key"  DefaultValue="" Description="" IsReadOnly="false" Type="Password">
+    <AttributeInfo Name="Private Access Key URI"  DefaultValue="" Description="Path to key" IsReadOnly="false" Type="Password">
       <Rules>
         <Rule Name="Configuration" />
         <Rule Name="Setting" />
@@ -156,7 +156,7 @@
       <AttributeValues>
       </AttributeValues>
       <Models>
-        <ResourceModel Description="" Name="Generic App Model" SupportsConcurrentCommands="false">
+        <ResourceModel Description="" Name="K8S App Model" SupportsConcurrentCommands="false">
           <AttachedAttributes>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Password"/>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="User"/>
@@ -172,6 +172,28 @@
         </ResourceModel>
       </Models>
       <Categories />
+    </ResourceFamily>
+    <ResourceFamily Name="K8S Objects" IsMappableContainer="false" IsMappable="false" IsConnectable="false" IsLicenseCheckRequired="false" IsAllConnectedContainer="false" IsLockedByDefault="false" AcceptsMultipleConnections="false" Description="" SupportsMulticastMapping="false" SupportsLoopbackMapping="false" IsPowerSwitch="false" IsConsoleServer="false" Searchable="false" ResourceType="Resource" AllowRemoteConnection="true">
+      <AttachedAttributes />
+      <AttributeValues />
+      <Models>
+        <ResourceModel Name="K8S Pod" Description="" SupportsConcurrentCommands="false">
+          <AttachedAttributes />
+          <AttributeValues />
+          <ParentModels>
+            <ParentModelName>K8S App Model</ParentModelName>
+          </ParentModels>
+          <Drivers />
+        </ResourceModel>
+        <ResourceModel Name="K8S Volume" Description="" SupportsConcurrentCommands="false">
+          <AttachedAttributes />
+          <AttributeValues />
+          <ParentModels>
+            <ParentModelName>K8S App Model</ParentModelName>
+          </ParentModels>
+          <Drivers />
+        </ResourceModel>
+      </Models>
     </ResourceFamily>
     <ResourceFamily Description="" IsService="true" Name="Deployment Options" ServiceType="Deployment">
       <AttachedAttributes />

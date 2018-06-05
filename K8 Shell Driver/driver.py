@@ -7,6 +7,7 @@ from DeployVMReturnObj import *
 import uuid
 global _k8s_context
 global _attrib
+
 class K8ShellDriver(ResourceDriverInterface):
     def __init__(self):
         """
@@ -68,8 +69,8 @@ class K8ShellDriver(ResourceDriverInterface):
         # run mike's code
         pak = ""
         with CloudShellSessionContext(context) as csapi:
-            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
-            cacert = csapi.DecryptPassword(CPAtts["CA Cert"]).Value
+            pak = csapi.DecryptPassword(CPAtts["Private Access Key URI"]).Value
+            cacert = csapi.DecryptPassword(CPAtts["CA Cert URI"]).Value
 
         _k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
         #_k8s_context.shell_health_check()
@@ -110,8 +111,8 @@ class K8ShellDriver(ResourceDriverInterface):
         _attrib = add
         pak = ""
         with CloudShellSessionContext(context) as csapi:
-            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
-            cacert = csapi.DecryptPassword(CPAtts["CA Cert"]).Value
+            pak = csapi.DecryptPassword(CPAtts["Private Access Key URI"]).Value
+            cacert = csapi.DecryptPassword(CPAtts["CA Cert URI"]).Value
 
         _k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
         _k8s_context.shell_health_check()
@@ -121,9 +122,9 @@ class K8ShellDriver(ResourceDriverInterface):
                                                       _k8s_context.AppDeployName,_k8s_context.AppNamespace, '',
                                                       _k8s_context.AppYamlFileName,_k8s_context.AppSubType,
                                                       _k8s_context.AppSvcName)
-        newAddr = svcObj["Addresses"][0] + ":" + str(svcObj["Ports"][0])
+        #newAddr = svcObj["Addresses"][0] + ":" + str(svcObj["Ports"][0])
 
-        ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], newAddr, "", attr)
+        ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], context.resource.attributes["IP Address"], "", attr)
 
         return ro
         pass
@@ -135,7 +136,7 @@ class K8ShellDriver(ResourceDriverInterface):
 
     def PowerOff(self, context, ports):
         with CloudShellSessionContext(context) as cloudshell_session:
-            cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Online", "Powered On")
+            cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Offline", "Powered Off")
         pass
 
     def PowerCycle(self, context, ports, delay):
@@ -145,6 +146,12 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
+        # place holder! this is how we will implement this
+        #rootName = command_context.remote_endpoints[0].fullname
+        #svcObj = _k8s_context.status_call(rootName)
+        #with CloudShellSessionContext(context) as csapi:
+        #    for sub in svcObj:
+        #        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=sub.Name, resourceAddress=sub.Address, folderFullPath='', parentResourceFullPath=rootName, resourceDescription='')
         return
         pass
 
@@ -168,8 +175,8 @@ class K8ShellDriver(ResourceDriverInterface):
         pak = ""
 
         with CloudShellSessionContext(context) as csapi:
-            pak = csapi.DecryptPassword(CPAtts["Private Access Key"]).Value
-            cacert = csapi.DecryptPassword(CPAtts["CA Cert"]).Value
+            pak = csapi.DecryptPassword(CPAtts["Private Access Key URI"]).Value
+            cacert = csapi.DecryptPassword(CPAtts["CA Cert URI"]).Value
 
         _k8s_context = K8S_APP_Shell_OS(add,  pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
         _k8s_context.shell_teardown_script(_k8s_context.AppName, _k8s_context.AppNamespace,
