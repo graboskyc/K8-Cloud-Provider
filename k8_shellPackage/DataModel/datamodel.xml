@@ -161,6 +161,14 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Password"/>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="User"/>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Public IP"/>
+
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Name"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Img"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Namespace"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Port"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Repl"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name"/>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App File"/>
           </AttachedAttributes>
           <AttributeValues>
           </AttributeValues>
@@ -259,7 +267,26 @@
         <Drivers/>
       </ResourceModel>
       <ResourceModel Description="" Name="Kubernetes Fake Deploy" ImagePath="K8Container.png" SupportsConcurrentCommands="false">          
-        <AttachedAttributes />
+        <AttachedAttributes>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Name" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Autoload" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App File" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Port" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Namespace" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+        </AttachedAttributes>
         <ParentModels />
         <Drivers/>
       </ResourceModel>
