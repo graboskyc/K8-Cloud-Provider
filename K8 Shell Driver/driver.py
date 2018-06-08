@@ -36,6 +36,8 @@ class K8ShellDriver(ResourceDriverInterface):
     ######################
     # begin helpers
     def getKey(self, context):
+        # private access key and cpa cert are stored as a encrypted uri on the cloud provider
+        # pull them from cloud provider and decrypt and return
         pak = ""
         cacert = ""
         CPAtts = context.resource.attributes
@@ -50,8 +52,12 @@ class K8ShellDriver(ResourceDriverInterface):
     ######################
     # Cloud provider
     ######################
+    # FLOW should be Deploy->PowerOn->Refresh IP all stateless!
+
     # begin cp
     def Deploy(self, context, request=None, cancellation_context=None):
+        # figure out if this is from image, from file, or test/dummy
+        # run correct function based on that which all have different attributes
         app_request = json.loads(request)
         deployment_name = app_request['DeploymentServiceName']
         if deployment_name in self.deployments.keys():
@@ -61,6 +67,7 @@ class K8ShellDriver(ResourceDriverInterface):
             raise Exception('Could not find the deployment')
 
     def deploy_fake(self, context, request, cancellation_context):
+        # quick testing method
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
         uid = str(uuid.uuid4())[:8]
@@ -73,6 +80,8 @@ class K8ShellDriver(ResourceDriverInterface):
         return ro
 
     def deploy_img(self, context, request, cancellation_context):
+        # deploy from image
+        
         # parse inputs and create a uuid for container name
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
@@ -111,11 +120,14 @@ class K8ShellDriver(ResourceDriverInterface):
                                                            _k8s_context.AppImgUpdate, "",
                                                            _k8s_context.AppSubType,
                                                            _k8s_context.AppSvcName)
+        # Return to cloudshell what it expects
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], context.resource.attributes["IP Address"], "", attr)
         return ro
         pass
 
     def deploy_file(self, context, request, cancellation_context):
+        # deploy from YAML file instead
+
         # parse inputs and create a uuid for container name
         r = json.loads(request)
         lrra = r["LogicalResourceRequestAttributes"]
@@ -139,6 +151,7 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppSvcName"] = r["Attributes"]["App Service Name"]
         _attrib = add
         
+        # get keys
         keys = self.getKey(context)
         pak = keys(0)
         cacert = keys(1)
@@ -152,17 +165,22 @@ class K8ShellDriver(ResourceDriverInterface):
                                                       _k8s_context.AppYamlFileName,_k8s_context.AppSubType,
                                                       _k8s_context.AppSvcName)
 
+        # build return object to CloudShell
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], context.resource.attributes["IP Address"], "", attr)
 
         return ro
         pass
 
     def PowerOn(self, context, ports):
+        # doesn't do anything now
+        # just change icon on resource 
         with CloudShellSessionContext(context) as cloudshell_session:
             cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Online", "Powered On")
         pass
 
     def PowerOff(self, context, ports):
+        # doesn't do anything now
+        # just change icon on resource 
         with CloudShellSessionContext(context) as cloudshell_session:
             cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Offline", "Powered Off")
         pass
@@ -174,11 +192,16 @@ class K8ShellDriver(ResourceDriverInterface):
         pass
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
+        # called after deployed and powered on
+        # here is how we will discover sub-resources
+
+        # figure out name of cloud provider and the deployed app name
         cpResource = context.resource
         cpName = cpResource.name
         cpResourceContext = cpResource.attributes
         rootAppName = context.remote_endpoints[0].fullname
 
+        # pass minimal detauls to mike's code
         add = {}
         add["AppName"] = CPAtts["App Name"]
         add["AppDeployName"] = rootAppName
@@ -189,15 +212,18 @@ class K8ShellDriver(ResourceDriverInterface):
         _k8s_context = K8S_APP_Shell_OS(add,  pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
 
         deployed = False
-
+        # we dont know if deployment is done
+        # so keep polling Mike's code to see when it is every 30 seconds
         with CloudShellSessionContext(context) as csapi:
             csapi.WriteMessageToReservationOutput(context.reservation.reservation_id, "Waiting for completed K8S deployment...")
             while not deployed:
                 statObj = _k8s_context.shell_health_check_script(rootAppName, CPAtts["App Namespace"], CPAtts["App Service Name"])
                 
-                if("Complete" not in statObj.Status):
+                if(("Complete" not in statObj.Status) or ("Failed" not in statObj.Status):
                     time.sleep(30)
                 else:
+                    # everything is done
+                    # iterate over each sub object returned by mike's code to create the pods, volumes, and endpoints
                     deployed = True
                     for p in statObj.Pods:
                         csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=p(2), resourceAddress=p(0), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=p(1))
