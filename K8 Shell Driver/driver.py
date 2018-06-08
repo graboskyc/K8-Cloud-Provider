@@ -224,16 +224,26 @@ class K8ShellDriver(ResourceDriverInterface):
                 else:
                     # everything is done
                     # iterate over each sub object returned by mike's code to create the pods, volumes, and endpoints
+                    # try/ignores are in case this is re-run due to new pods added. that will ignore existing things with same name
                     deployed = True
                     for p in statObj.Pods:
-                        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=p(2), resourceAddress=p(0), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=p(1))
+                        try:
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=p(2), resourceAddress=p(0), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=p(1))
+                        except:
+                            pass
                     for v in statObj.Volumes:
-                        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Volume', resourceName=v(2), resourceAddress=v(1), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=v(3))
+                        try:
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Volume', resourceName=v(2), resourceAddress=v(1), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=v(3))
+                        except:
+                            pass
                     eCt = 0
                     for e in statObj.Endpoints:
-                        eName = "Endpoint " + str(eCt)
-                        eAddr = e.Addresses[eCt] + ":" + e.Ports[eCt]
-                        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Endpoint', resourceName=eName, resourceAddress=eAddr, folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription='')
+                        try:
+                            eName = "Endpoint " + str(eCt)
+                            eAddr = e.Addresses[eCt] + ":" + e.Ports[eCt]
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Endpoint', resourceName=eName, resourceAddress=eAddr, folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription='')
+                        except:
+                            pass
                         eCt = eCt + 1
         return
         pass
