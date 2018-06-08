@@ -16,6 +16,7 @@ class K8ShellDriver(ResourceDriverInterface):
         self.deployments = dict()
         self.deployments['Kubernetes Deploy Container From Image'] = self.deploy_img
         self.deployments['Kubernetes Deploy Container From File'] = self.deploy_file
+        self.deployments['Kubernetes Fake Deploy'] = self.deploy_fake
         pass
 
     def Deploy(self, context, request=None, cancellation_context=None):
@@ -39,6 +40,17 @@ class K8ShellDriver(ResourceDriverInterface):
             api_ca_cert = content_file.read()
 
         return api_ca_cert
+
+    def deploy_fake(self, context, request, cancellation_context):
+        r = json.loads(request)
+        lrra = r["LogicalResourceRequestAttributes"]
+        uid = str(uuid.uuid4())[:8]
+        newName = r["UserRequestedAppName"] + "-" + uid
+        attr = {}
+
+        ro = DeployVMReturnObj(newName, uid, "127.0.0.1", "127.0.0.1", "", attr)
+
+        return ro
 
     def deploy_img(self, context, request, cancellation_context):
         # parse inputs and create a uuid for container name
@@ -73,7 +85,6 @@ class K8ShellDriver(ResourceDriverInterface):
             cacert = csapi.DecryptPassword(CPAtts["CA Cert URI"]).Value
 
         _k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
-        #_k8s_context.shell_health_check()
 
         # change for shell deployment script add service name and service object
         svcObj = _k8s_context.shell_deployment_script(_k8s_context.AppName, _k8s_context.AppPort,
@@ -147,8 +158,10 @@ class K8ShellDriver(ResourceDriverInterface):
 
     def remote_refresh_ip(self, context, ports, cancellation_context):
         # place holder! this is how we will implement this
-        #rootName = command_context.remote_endpoints[0].fullname
-        #svcObj = _k8s_context.status_call(rootName)
+
+        #rootName = context.remote_endpoints[0].fullname
+        #_k8s_context = K8S_APP_Shell_OS(add,  pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
+        #svc_status_obj = _k8s_context.shell_health_check(k8s_shell.AppDeployName, k8s_shell.AppNamespace, k8s_shell.AppSvcName)
         #with CloudShellSessionContext(context) as csapi:
         #    for sub in svcObj:
         #        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=sub.Name, resourceAddress=sub.Address, folderFullPath='', parentResourceFullPath=rootName, resourceDescription='')

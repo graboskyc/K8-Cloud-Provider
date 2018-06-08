@@ -173,7 +173,7 @@
       </Models>
       <Categories />
     </ResourceFamily>
-    <ResourceFamily Name="K8S Objects" IsMappableContainer="false" IsMappable="false" IsConnectable="false" IsLicenseCheckRequired="false" IsAllConnectedContainer="false" IsLockedByDefault="false" AcceptsMultipleConnections="false" Description="" SupportsMulticastMapping="false" SupportsLoopbackMapping="false" IsPowerSwitch="false" IsConsoleServer="false" Searchable="false" ResourceType="Resource" AllowRemoteConnection="true">
+    <ResourceFamily Name="K8S Objects" IsMappableContainer="false" IsMappable="false" IsConnectable="false" IsLicenseCheckRequired="false" IsAllConnectedContainer="false" IsLockedByDefault="false" AcceptsMultipleConnections="false" Description="" SupportsMulticastMapping="false" SupportsLoopbackMapping="false" IsPowerSwitch="false" IsConsoleServer="false" ResourceType="Resource" AllowRemoteConnection="true">
       <AttachedAttributes />
       <AttributeValues />
       <Models>
@@ -186,6 +186,14 @@
           <Drivers />
         </ResourceModel>
         <ResourceModel Name="K8S Volume" Description="" SupportsConcurrentCommands="false">
+          <AttachedAttributes />
+          <AttributeValues />
+          <ParentModels>
+            <ParentModelName>K8S App Model</ParentModelName>
+          </ParentModels>
+          <Drivers />
+        </ResourceModel>
+        <ResourceModel Name="K8S Endpoint" Description="" SupportsConcurrentCommands="false">
           <AttachedAttributes />
           <AttributeValues />
           <ParentModels>
@@ -247,6 +255,11 @@
               <AllowedValues />
             </AttachedAttribute>
         </AttachedAttributes>
+        <ParentModels />
+        <Drivers/>
+      </ResourceModel>
+      <ResourceModel Description="" Name="Kubernetes Fake Deploy" ImagePath="K8Container.png" SupportsConcurrentCommands="false">          
+        <AttachedAttributes />
         <ParentModels />
         <Drivers/>
       </ResourceModel>

@@ -35,7 +35,7 @@ if $downloadLatest; then
     echo "Downloading Latest Version of Code"
     echo
 
-    wget https://raw.githubusercontent.com/mpw07458/K8S-Deploy-Shell/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py?token=AhVDVkas40HYGFb_bNW7pQOhAizpIy1iks5bDhCawA%3D%3D -O K8S_App_Shell_OS.py -q
+    wget https://raw.githubusercontent.com/mpw07458/K8S-Deploy-Shell/master/pure-play/drivers/K8S_App_Shell/src/K8S_App_Shell_OS.py?token=ABm6FvpzCmNpB_2SG6UIy7UTEdvZIbr_ks5bI9otwA%3D%3D -O K8S_App_Shell_OS.py -q
 fi
 
 if $incBuild; then
