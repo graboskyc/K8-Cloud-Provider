@@ -5,6 +5,7 @@ from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionCo
 from K8S_App_Shell_OS import *
 from DeployVMReturnObj import *
 import uuid
+import time
 global _k8s_context
 global _attrib
 
@@ -187,10 +188,27 @@ class K8ShellDriver(ResourceDriverInterface):
 
         _k8s_context = K8S_APP_Shell_OS(add,  pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
 
-        statObj = _k8s_context.shell_health_check_script(rootAppName, CPAtts["App Namespace"], CPAtts["App Service Name"])
-        #with CloudShellSessionContext(context) as csapi:
-        #    for sub in svcObj:
-        #        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=sub.Name, resourceAddress=sub.Address, folderFullPath='', parentResourceFullPath=rootName, resourceDescription='')
+        deployed = False
+
+        with CloudShellSessionContext(context) as csapi:
+            csapi.WriteMessageToReservationOutput(context.reservation.reservation_id, "Waiting for completed K8S deployment...")
+            while not deployed:
+                statObj = _k8s_context.shell_health_check_script(rootAppName, CPAtts["App Namespace"], CPAtts["App Service Name"])
+                
+                if("Complete" not in statObj.Status):
+                    time.sleep(30)
+                else:
+                    deployed = True
+                    for p in statObj.Pods:
+                        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=p(2), resourceAddress=p(0), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=p(1))
+                    for v in statObj.Volumes:
+                        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Volume', resourceName=v(2), resourceAddress=v(1), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=v(3))
+                    eCt = 0
+                    for e in statObj.Endpoints:
+                        eName = "Endpoint " + str(eCt)
+                        eAddr = e.Addresses[eCt] + ":" + e.Ports[eCt]
+                        csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Endpoint', resourceName=eName, resourceAddress=eAddr, folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription='')
+                        eCt = eCt + 1
         return
         pass
 
