@@ -88,7 +88,7 @@
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
-    <AttributeInfo Name="CA Cert URI"  DefaultValue="Path to cert" Description="." IsReadOnly="false" Type="Password">
+    <AttributeInfo Name="CA Cert URI"  DefaultValue="" Description="Path to cert" IsReadOnly="false" Type="Password">
       <Rules>
         <Rule Name="Configuration" />
         <Rule Name="Setting" />
@@ -124,10 +124,10 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Service Account Username">
               <AllowedValues />
             </AttachedAttribute>
-            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="CA Cert">
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="CA Cert URI">
               <AllowedValues />
             </AttachedAttribute>
-            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Private Access Key">
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Private Access Key URI">
               <AllowedValues />
             </AttachedAttribute>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="IP Address">
