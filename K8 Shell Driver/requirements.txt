@@ -2,3 +2,4 @@ cloudshell-automation-api>=8.3.0.0,<8.3.1.0
 cloudshell-shell-core==4.0.242
 kubernetes>=6.0<6.1
 openshift>=0.4.4,<0.6
+enum==0.4.6

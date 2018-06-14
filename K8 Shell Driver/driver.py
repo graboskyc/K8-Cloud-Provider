@@ -35,7 +35,7 @@ class K8ShellDriver(ResourceDriverInterface):
     # Helper Functions
     ######################
     # begin helpers
-    def getKey(self, context):
+    def _getKey(self, context):
         # private access key and cpa cert are stored as a encrypted uri on the cloud provider
         # pull them from cloud provider and decrypt and return
         pak = ""
@@ -45,8 +45,28 @@ class K8ShellDriver(ResourceDriverInterface):
         with CloudShellSessionContext(context) as csapi:
             pak = csapi.DecryptPassword(CPAtts["Private Access Key URI"]).Value
             cacert = csapi.DecryptPassword(CPAtts["CA Cert URI"]).Value
-        return (pak,cacert)
+        print("Private Access Key URI: ")
+        pprint(pak)
+        print("CA Cert URI: ")
+        pprint(cacert)
+        return {"Private Access Key URI": pak,"CA Cert URI": cacert}
 
+    def _storeappDict(self, appDict, resourceName):
+        addfileName = resourceName +'.txt'
+        with open(addfileName, 'w') as f:
+            f.write(json.dumps(appDict))
+            f.close()
+
+    def _getappDict(self, resourceName):
+        addfileName = resourceName +'.txt'
+        appDict = {}
+        try:
+            appDict = json.load(open(addfileName))
+        except IOError as e:
+            print "Error: File " + addfileName + "does not appear to exist.", e
+            logging.error("File does not appear to exist.", e)
+            # app attributes
+        return appDict
     # end helpers
 
     ######################
@@ -106,20 +126,32 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppImgUpdate"] = ""
         add["AppSvcName"] = r["Attributes"]["App Service Name"]
 
-        # run mike's code
-        keys = self.getKey(context)
-        pak = keys(0)
-        cacert = keys(1)
+        self._storeappDict(add, newName)
+        # _attrib = add
+        pak = ""
+        cacert = ""
+
+        # get keys
+        keys = self._getKey(context)
+        pak = keys["Private Access Key URI"]
+        cacert = keys["CA Cert URI"]
+        print("Private Access Key URI: ")
+        pprint(pak)
+        print("CA Cert URI: ")
+        pprint(cacert)
+
         _k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
 
         # change for shell deployment script add service name and service object
-        svcObj = _k8s_context.shell_deployment_script(_k8s_context.AppName, _k8s_context.AppPort,
+        svcStatusObj = _k8s_context.shell_deployment_script(_k8s_context.AppName, _k8s_context.AppPort,
                                                            _k8s_context.AppImg, _k8s_context.AppType,
                                                            _k8s_context.AppRepl, _k8s_context.AppDeployName,
                                                            _k8s_context.AppNamespace,
                                                            _k8s_context.AppImgUpdate, "",
                                                            _k8s_context.AppSubType,
                                                            _k8s_context.AppSvcName)
+        print("Service Status object: ")
+        pprint(svcStatusObj)
         # Return to cloudshell what it expects
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], context.resource.attributes["IP Address"], "", attr)
         return ro
@@ -149,22 +181,29 @@ class K8ShellDriver(ResourceDriverInterface):
         add["AppType"] = "yaml"
         add["AppSubType"] = "app"
         add["AppSvcName"] = r["Attributes"]["App Service Name"]
+        add["NewName"] = newName
         _attrib = add
-        
+        pak=""
+        cacert=""
         # get keys
-        keys = self.getKey(context)
-        pak = keys(0)
-        cacert = keys(1)
-
+        keys = self._getKey(context)
+        self._storeappDict(add, newName)
+        pak = keys["Private Access Key URI"]
+        cacert = keys["CA Cert URI"]
+        print("Private Access Key URI: ")
+        pprint(pak)
+        print("CA Cert URI: ")
+        pprint(cacert)
         _k8s_context = K8S_APP_Shell_OS(add, pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
-        _k8s_context.shell_health_check()
+        #_k8s_context.shell_health_check_script()
 
         # change for shell deployment script add service name and service object
-        svcObj = _k8s_context.shell_deployment_script(_k8s_context.AppName, '', '', _k8s_context.AppType,'',
+        svcStatusObj = _k8s_context.shell_deployment_script(_k8s_context.AppName, '', '', _k8s_context.AppType,'',
                                                       _k8s_context.AppDeployName,_k8s_context.AppNamespace, '',
                                                       _k8s_context.AppYamlFileName,_k8s_context.AppSubType,
                                                       _k8s_context.AppSvcName)
-
+        print("Service Status Object: ")
+        pprint(svcStatusObj)
         # build return object to CloudShell
         ro = DeployVMReturnObj(newName, uid, context.resource.attributes["IP Address"], context.resource.attributes["IP Address"], "", attr)
 
@@ -199,15 +238,34 @@ class K8ShellDriver(ResourceDriverInterface):
         cpResource = context.resource
         cpName = cpResource.name
         cpResourceContext = cpResource.attributes
+        #resID = context.reservation.reservation_id
+        CPAtts = context.resource.attributes
+        print("Atributes: ")
+        pprint(CPAtts)
         rootAppName = context.remote_endpoints[0].fullname
-
+        add = self._getappDict(rootAppName)
         # pass minimal detauls to mike's code
-        add = {}
-        add["AppName"] = CPAtts["App Name"]
-        add["AppDeployName"] = rootAppName
-        add["AppNamespace"] = CPAtts["App Namespace"]
-        add["AppSubType"] = "app"
-        add["AppSvcName"] = CPAtts["App Service Name"]
+        # add = {}
+        # add["AppName"] = CPAtts["App Name"]
+        # add["AppDeployName"] = CPAtts["App Name"]
+        # add["AppNamespace"] = CPAtts["App Namespace"]
+        # add["AppSubType"] = "app"
+        # add["AppSvcName"] = CPAtts["App Service Name"]
+
+        # _attrib = add
+        pak = ""
+        cacert = ""
+        print("App Attributes: ")
+        pprint(add)
+        # get keys
+        keys = self._getKey(context)
+
+        pak = keys["Private Access Key URI"]
+        cacert = keys["CA Cert URI"]
+        print("Private Access Key URI: ")
+        pprint(pak)
+        print("CA Cert URI: ")
+        pprint(cacert)
 
         _k8s_context = K8S_APP_Shell_OS(add,  pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
 
@@ -215,53 +273,83 @@ class K8ShellDriver(ResourceDriverInterface):
         # we dont know if deployment is done
         # so keep polling Mike's code to see when it is every 30 seconds
         with CloudShellSessionContext(context) as csapi:
-            csapi.WriteMessageToReservationOutput(context.reservation.reservation_id, "Waiting for completed K8S deployment...")
+
+        #csapi.WriteMessageToReservationOutput(resID,"Waiting for completed K8S deployment...")
             while not deployed:
-                statObj = _k8s_context.shell_health_check_script(rootAppName, CPAtts["App Namespace"], CPAtts["App Service Name"])
+                statObj = _k8s_context.shell_health_check_script(_k8s_context.AppName, _k8s_context.AppNamespace,
+                                                                 _k8s_context.AppSvcName)
                 
-                if(("Complete" not in statObj.Status) or ("Failed" not in statObj.Status):
+                if(("Success" not in statObj["Status"]) or ("Fail" not in statObj["Status"])):
                     time.sleep(30)
                 else:
                     # everything is done
                     # iterate over each sub object returned by mike's code to create the pods, volumes, and endpoints
-                    # try/ignores are in case this is re-run due to new pods added. that will ignore existing things with same name
+                    # try/ignores are in case this is re-run due to new pods added.
+                    # that will ignore existing things with same name
                     deployed = True
-                    for p in statObj.Pods:
+                    for p in statObj["Pods"]:
                         try:
-                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=p(2), resourceAddress=p(0), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=p(1))
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod',
+                                                 resourceName=p(2), resourceAddress=p(0), folderFullPath='',
+                                                 parentResourceFullPath=rootAppName, resourceDescription=p(1))
                         except:
                             pass
-                    for v in statObj.Volumes:
+                    for v in statObj["Volumes"]:
                         try:
-                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Volume', resourceName=v(2), resourceAddress=v(1), folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription=v(3))
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Volume',
+                                                 resourceName=v(2), resourceAddress=v(1), folderFullPath='',
+                                                 parentResourceFullPath=rootAppName, resourceDescription=v(3))
                         except:
                             pass
                     eCt = 0
-                    for e in statObj.Endpoints:
+                    for e in statObj["Endpoints"]:
                         try:
                             eName = "Endpoint " + str(eCt)
                             eAddr = e.Addresses[eCt] + ":" + e.Ports[eCt]
-                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Endpoint', resourceName=eName, resourceAddress=eAddr, folderFullPath='', parentResourceFullPath=rootAppName, resourceDescription='')
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Endpoint',
+                                                 resourceName=eName, resourceAddress=eAddr, folderFullPath='',
+                                                 parentResourceFullPath=rootAppName, resourceDescription='')
                         except:
                             pass
                         eCt = eCt + 1
+                    for s in statObj["Secrets"]:
+                        try:
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Secret',
+                                                 resourceName=s(2), resourceAddress=s(0), folderFullPath='',
+                                                 parentResourceFullPath=rootAppName, resourceDescription=s(1))
+                        except:
+                            pass
         return
         pass
 
     def destroy_vm_only(self, context, ports):
+        # figure out name of cloud provider and the deployed app name
+        cpResource = context.resource
+        cpName = cpResource.name
+        cpResourceContext = cpResource.attributes
         CPAtts = context.resource.attributes
-        newName = context.remote_endpoints[0].fullname
+        print("Atributes: ")
+        pprint(CPAtts)
+        rootAppName = context.remote_endpoints[0].fullname
+        # pass minimal detauls to mike's code
+        # get keys
+        keys = self._getKey(context)
+        add = self._getappDict(rootAppName)
+        print("App Attributes: ")
+        pprint(add)
+        pak = keys["Private Access Key URI"]
+        cacert = keys["CA Cert URI"]
+        print("Private Access Key URI: ")
+        pprint(pak)
+        print("CA Cert URI: ")
+        pprint(cacert)
 
-        keys = self.getKey(context)
-        pak = keys(0)
-        cacert = keys(1)
-
-        add = {}
-        add["AppName"] = CPAtts["App Name"]
-        add["AppDeployName"] = newName
-        add["AppNamespace"] = CPAtts["App Namespace"]
-        add["AppSubType"] = "app"
-        add["AppSvcName"] = CPAtts["App Service Name"]
+        #add = {}
+        #add["AppName"] = CPAtts["App Name"]
+        #add["AppDeployName"] = CPAtts["App Name"]
+        #add["AppNamespace"] = CPAtts["App Namespace"]
+        #add["AppSubType"] = "app"
+        #add["AppSvcName"] = CPAtts["App Service Name"]
 
         _k8s_context = K8S_APP_Shell_OS(add,  pak, CPAtts["IP Address"], CPAtts["Port"], cacert)
         _k8s_context.shell_teardown_script(_k8s_context.AppName, _k8s_context.AppNamespace,
