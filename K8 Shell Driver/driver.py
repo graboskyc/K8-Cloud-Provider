@@ -68,7 +68,7 @@ class K8ShellDriver(ResourceDriverInterface):
             # app attributes
         return appDict
     
-    def _status_decode(statObj):
+    def _status_decode(self, statObj):
         print("Status: ")
         pprint(statObj["Status"])
         statusDecode=False
@@ -288,7 +288,7 @@ class K8ShellDriver(ResourceDriverInterface):
                 statObj = _k8s_context.shell_health_check_script(_k8s_context.AppName, _k8s_context.AppNamespace,
                                                                  _k8s_context.AppSvcName)
                 
-                if not _status_decode(statObj):
+                if not self._status_decode(statObj):
                     # not finished deploying
                     time.sleep(30)
                 else:
