@@ -67,6 +67,15 @@ class K8ShellDriver(ResourceDriverInterface):
             logging.error("File does not appear to exist.", e)
             # app attributes
         return appDict
+    
+    def _status_decode(statObj):
+        print("Status: ")
+        pprint(statObj["Status"])
+        statusDecode=False
+        for item in statObj["Status"]:
+            if item.find("Fail") != -1 or item.find("Success") != -1:
+                statusDecode=True
+        return statusDecode
     # end helpers
 
     ######################
@@ -279,7 +288,8 @@ class K8ShellDriver(ResourceDriverInterface):
                 statObj = _k8s_context.shell_health_check_script(_k8s_context.AppName, _k8s_context.AppNamespace,
                                                                  _k8s_context.AppSvcName)
                 
-                if(("Success" not in statObj["Status"]) or ("Fail" not in statObj["Status"])):
+                if not _status_decode(statObj):
+                    # not finished deploying
                     time.sleep(30)
                 else:
                     # everything is done
