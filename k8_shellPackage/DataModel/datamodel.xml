@@ -7,6 +7,12 @@
         <Rule Name="Setting" />
       </Rules>
     </AttributeInfo>
+    <AttributeInfo Name="Wait for IP" DefaultValue="true" Description="Wait for IP" IsReadOnly="false" Type="Boolean">
+      <Rules>
+        <Rule Name="Configuration" />
+        <Rule Name="Setting" />
+      </Rules>
+    </AttributeInfo>
 
     <!-- For K8S Container (App) -->
     <AttributeInfo Name="App Name" DefaultValue="" Description="." IsReadOnly="false" Type="String">
@@ -246,6 +252,9 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name" UserInput="true">
               <AllowedValues />
             </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Wait for IP" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
         </AttachedAttributes>
         <ParentModels />
         <Drivers/>
@@ -270,6 +279,9 @@
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name" UserInput="true">
               <AllowedValues />
             </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Wait for IP" UserInput="false">
+              <AllowedValues />
+            </AttachedAttribute>
         </AttachedAttributes>
         <ParentModels />
         <Drivers/>
@@ -292,6 +304,9 @@
               <AllowedValues />
             </AttachedAttribute>
             <AttachedAttribute IsLocal="true" IsOverridable="true" Name="App Service Name" UserInput="true">
+              <AllowedValues />
+            </AttachedAttribute>
+            <AttachedAttribute IsLocal="true" IsOverridable="true" Name="Wait for IP" UserInput="false">
               <AllowedValues />
             </AttachedAttribute>
         </AttachedAttributes>
