@@ -209,6 +209,14 @@
           </ParentModels>
           <Drivers />
         </ResourceModel>
+        <ResourceModel Name="K8S Secret" Description="" SupportsConcurrentCommands="false">
+          <AttachedAttributes />
+          <AttributeValues />
+          <ParentModels>
+            <ParentModelName>K8S App Model</ParentModelName>
+          </ParentModels>
+          <Drivers />
+        </ResourceModel>
       </Models>
     </ResourceFamily>
     <ResourceFamily Description="" IsService="true" Name="Deployment Options" ServiceType="Deployment">

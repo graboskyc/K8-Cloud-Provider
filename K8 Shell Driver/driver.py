@@ -283,7 +283,7 @@ class K8ShellDriver(ResourceDriverInterface):
         # so keep polling Mike's code to see when it is every 30 seconds
         with CloudShellSessionContext(context) as csapi:
 
-        #csapi.WriteMessageToReservationOutput(resID,"Waiting for completed K8S deployment...")
+            #csapi.WriteMessageToReservationOutput(resID,"Waiting for completed K8S deployment...")
             while not deployed:
                 statObj = _k8s_context.shell_health_check_script(_k8s_context.AppName, _k8s_context.AppNamespace,
                                                                  _k8s_context.AppSvcName)
@@ -297,19 +297,28 @@ class K8ShellDriver(ResourceDriverInterface):
                     # try/ignores are in case this is re-run due to new pods added.
                     # that will ignore existing things with same name
                     deployed = True
+                    errorFN = "C:\\temp\\error_"+rootAppName+".txt"
+                    with open(errorFN, 'a') as f:
+                        f.write("Using "+rootAppName +"\n\n-----\n\n")
+                        f.close()
                     for p in statObj["Pods"]:
                         try:
-                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod',
-                                                 resourceName=p(2), resourceAddress=p(0), folderFullPath='',
-                                                 parentResourceFullPath=rootAppName, resourceDescription=p(1))
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Pod', resourceName=p[2], resourceAddress=p[0], parentResourceFullPath=rootAppName, resourceDescription=p[1])
                         except:
+                            with open(errorFN, 'a') as f:
+                                f.write("parent: " + rootAppName + " resourceName: " + p[2] + " resourceAddress: " + p[0] + " resourceDescription: " + p[1] + "\n")
+                                f.write("Error with pods\n"+json.dumps(statObj)+"\n\n")
+                                f.close()
                             pass
                     for v in statObj["Volumes"]:
                         try:
                             csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Volume',
-                                                 resourceName=v(2), resourceAddress=v(1), folderFullPath='',
-                                                 parentResourceFullPath=rootAppName, resourceDescription=v(3))
+                                                 resourceName=v[1], resourceAddress=v[1], folderFullPath='',
+                                                 parentResourceFullPath=rootAppName, resourceDescription=v[2])
                         except:
+                            with open(errorFN, 'a') as f:
+                                f.write("Error with vols\n"+json.dumps(statObj)+"\n\n")
+                                f.close()
                             pass
                     eCt = 0
                     for e in statObj["Endpoints"]:
@@ -320,14 +329,19 @@ class K8ShellDriver(ResourceDriverInterface):
                                                  resourceName=eName, resourceAddress=eAddr, folderFullPath='',
                                                  parentResourceFullPath=rootAppName, resourceDescription='')
                         except:
+                            with open(errorFN, 'a') as f:
+                                f.write("Error with endpoints\n"+json.dumps(statObj)+"\n\n")
+                                f.close()
                             pass
                         eCt = eCt + 1
                     for s in statObj["Secrets"]:
                         try:
-                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Secret',
-                                                 resourceName=s(2), resourceAddress=s(0), folderFullPath='',
-                                                 parentResourceFullPath=rootAppName, resourceDescription=s(1))
+                            csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Secret', resourceName=s[1], resourceAddress=s[0], parentResourceFullPath=rootAppName, resourceDescription=s[1])
                         except:
+                            with open(errorFN, 'a') as f:
+                                f.write("parent: " + rootAppName + " resourceName: " + s[1] + " resourceAddress: " + s[0] + " resourceDescription: " + s[1] + "\n")
+                                f.write("Error with secrets\n"+json.dumps(statObj)+"\n\n")
+                                f.close()
                             pass
         return
         pass
