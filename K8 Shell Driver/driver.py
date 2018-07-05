@@ -250,6 +250,8 @@ class K8ShellDriver(ResourceDriverInterface):
             if (len(rd.ChildResources) == 0):
                 self.discover(context, ports)
 
+    # this should be restructured into the K8S App Model shell instead of the cloud provider shell
+    # this technical debt will be done during official cloud provider support in CS 9.0
     def discover(self, context, ports):
         # called after deployed and powered on
         # here is how we will discover sub-resources
