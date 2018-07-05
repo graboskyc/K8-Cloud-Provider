@@ -224,6 +224,9 @@ class K8ShellDriver(ResourceDriverInterface):
         # just change icon on resource 
         with CloudShellSessionContext(context) as cloudshell_session:
             cloudshell_session.SetResourceLiveStatus(context.remote_endpoints[0].fullname, "Online", "Powered On")
+            rd = cloudshell_session.GetResourceDetails(context.remote_endpoints[0].fullname)
+            if (len(rd.ChildResources) == 0):
+                self.discover(context, ports)
         pass
 
     def PowerOff(self, context, ports):
@@ -239,7 +242,15 @@ class K8ShellDriver(ResourceDriverInterface):
         self.PowerOn(context, ports)
         pass
 
+    
+
     def remote_refresh_ip(self, context, ports, cancellation_context):
+        with CloudShellSessionContext(context) as cloudshell_session:
+            rd = cloudshell_session.GetResourceDetails(context.remote_endpoints[0].fullname)
+            if (len(rd.ChildResources) == 0):
+                self.discover(context, ports)
+
+    def discover(self, context, ports):
         # called after deployed and powered on
         # here is how we will discover sub-resources
 
