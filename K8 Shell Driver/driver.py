@@ -287,7 +287,10 @@ class K8ShellDriver(ResourceDriverInterface):
             while not deployed:
                 statObj = _k8s_context.shell_health_check_script(_k8s_context.AppName, _k8s_context.AppNamespace,
                                                                  _k8s_context.AppSvcName)
-                
+                errorFN = "C:\\temp\\error_" + rootAppName + ".txt"
+                with open(errorFN, 'a') as f:
+                    f.write("Status Object:\n"+json.dumps(statObj)+"\n\n")
+                    f.close()
                 if not self._status_decode(statObj):
                     # not finished deploying
                     time.sleep(30)
@@ -297,7 +300,7 @@ class K8ShellDriver(ResourceDriverInterface):
                     # try/ignores are in case this is re-run due to new pods added.
                     # that will ignore existing things with same name
                     deployed = True
-                    errorFN = "C:\\temp\\error_"+rootAppName+".txt"
+
                     with open(errorFN, 'a') as f:
                         f.write("Using "+rootAppName +"\n\n-----\n\n")
                         f.close()
@@ -323,8 +326,8 @@ class K8ShellDriver(ResourceDriverInterface):
                     eCt = 0
                     for e in statObj["Endpoints"]:
                         try:
-                            eName = "Endpoint " + str(eCt)
-                            eAddr = e.Addresses[eCt] + ":" + e.Ports[eCt]
+                            eName = "service-endpoint-" + str(eCt)
+                            eAddr = e[1] + ":" + e[0]
                             csapi.CreateResource(resourceFamily='K8S Objects', resourceModel='K8S Endpoint',
                                                  resourceName=eName, resourceAddress=eAddr, folderFullPath='',
                                                  parentResourceFullPath=rootAppName, resourceDescription='')
