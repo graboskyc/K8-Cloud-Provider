@@ -11,8 +11,8 @@
             </AutoLoad>
             <Attributes>
                 <Attribute Value="" Name="Service Account Username"/>
-                <Attribute Value="" Name="CA Cert"/>
-                <Attribute Value="" Name="Private Access Key"/>
+                <Attribute Value="" Name="CA Cert URI"/>
+                <Attribute Value="" Name="Private Access Key URI"/>
                 <Attribute Value="" Name="IP Address"/>
                 <Attribute Value="" Name="Port"/>
                 <Attribute Value="" Name="Execution Server Selector"/>
